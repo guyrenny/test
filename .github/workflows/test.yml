@@ -23,7 +23,8 @@ jobs:
         run: |
           CHANGED_DIR=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F/ '{ print $2 }' | head -n 1)
           echo "::set-output name=dir::$CHANGED_DIR"
-        
+      - name: echo
+        run: echo $CHANGED_DIR
       - name: terraform fmt
         uses: dflook/terraform-fmt@v1
         with:
