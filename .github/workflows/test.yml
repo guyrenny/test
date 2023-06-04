@@ -27,7 +27,7 @@ jobs:
           format: directories
           
       - name: Echo changed files
-        run: echo ${{ steps.get_changed.outputs.changed }}
+        run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
         
       - name: terraform fmt
         uses: dflook/terraform-fmt@v1
