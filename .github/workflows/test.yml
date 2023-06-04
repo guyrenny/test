@@ -21,10 +21,12 @@ jobs:
       - name: Get Changed Files
         id: changed-files
         run: echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '.tf$')"
-
+      - name: ls
+        run: ls
       - name: get modules
         run: cd modules
-
+      - name: ls
+        run: ls
       - name: Terraform Init
         run: terraform init
 
