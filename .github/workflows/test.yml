@@ -27,7 +27,7 @@ jobs:
           format: csv
           
       - name: create
-        run: $test = 2
+        run: export test=2
       - name: test
         run: echo $test
         
