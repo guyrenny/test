@@ -18,7 +18,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
-       - name: Determine Changed Directory
+      - name: Determine Changed Directory
         id: changed-directory
         run: |
           CHANGED_DIR=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^terraform/modules/' | awk -F/ '{ print $2 }' | head -n 1)
