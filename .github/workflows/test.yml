@@ -22,8 +22,16 @@ jobs:
         id: changed-files
         run: echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '.tf$')"
         
-      - name: Terraform fmt
-        run: terraform fmt
+      - name: Apply Terraform Fmt
+        run: |
+          CHANGED_FILES=${{ steps.changed-files.outputs.files }}
+          if [ -n "$CHANGED_FILES" ]; then
+            for FILE in $CHANGED_FILES; do
+              terraform fmt -check $FILE
+            done
+          else
+            echo "No Terraform files changed"
+          fi
         
       - name: Terraform Init
         run: terraform init
