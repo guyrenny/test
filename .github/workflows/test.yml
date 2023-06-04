@@ -24,7 +24,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           ignore: "**/+(.github)"
           foldersOnly: true 
-          format: directories
+          format: csv
           
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
