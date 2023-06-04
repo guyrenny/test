@@ -26,6 +26,11 @@ jobs:
           foldersOnly: true 
           format: csv
           
+      - name: create
+        run: $test = 2
+      - name: test
+        run: echo $test
+        
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
         
