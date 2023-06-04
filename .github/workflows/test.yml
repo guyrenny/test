@@ -34,3 +34,11 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
         working-directory: modules/
+        
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          commit-message: terraform fmt
+          title: Reformat terraform files
+          body: Update terraform files to canonical format using `terraform fmt`
+          branch: automated-terraform-fmt
