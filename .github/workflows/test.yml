@@ -26,11 +26,4 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: |
-          for file in ${{ steps.changed-files.outputs.files }}; do
-            if [[ $file == *.tf ]]; then
-              terraform plan --var-file=vars.tfvars $file
-            else
-              echo "Skipping non-Terraform file: $file"
-            fi
-          done
+        run: terraform plan
