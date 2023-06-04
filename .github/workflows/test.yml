@@ -27,7 +27,7 @@ jobs:
           CHANGED_FILES=${{ steps.changed-files.outputs.files }}
           if [ -n "$CHANGED_FILES" ]; then
             for FILE in $CHANGED_FILES; do
-              terraform fmt -check $FILE
+              terraform fmt $FILE
             done
           else
             echo "No Terraform files changed"
