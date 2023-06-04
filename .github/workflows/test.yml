@@ -18,23 +18,27 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Determine Changed Directory
-        id: changed-directory
-        run: |
-          CHANGED_DIR=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F/ '{ print $2 }' | head -n 1)
-          echo "::set-output name=dir::$CHANGED_DIR"
-      - name: echo
-        run: echo $CHANGED_DIR
+      - uses: Stockopedia/action-get-changed-files@v1
+        id: get_changed
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ignore: "**/+(.github)"
+          foldersOnly: true 
+          format: csv
+          
+      - name: Echo
+        run: echo ${{ steps.get_changed.outputs.changed }}
+        
       - name: terraform fmt
         uses: dflook/terraform-fmt@v1
         with:
-          path: $CHANGED_DIR/
+          path: ${{ steps.get_changed.outputs.changed }}/
         
       - name: Terraform Init
         run: terraform init
-        working-directory: $CHANGED_DIR/
+        working-directory: ${{ steps.get_changed.outputs.changed }}/
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: $CHANGED_DIR/
+        working-directory: ${{ steps.get_changed.outputs.changed }}/
         
