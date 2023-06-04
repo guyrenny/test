@@ -23,7 +23,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           ignore: "**/+(.github)"
-          foldersOnly: false 
+          foldersOnly: true 
           format: csv
           
       - name: Echo changed files
