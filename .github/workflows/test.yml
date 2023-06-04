@@ -21,7 +21,7 @@ jobs:
       - name: Determine Changed Directory
         id: changed-directory
         run: |
-          CHANGED_DIR=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^terraform/modules/' | awk -F/ '{ print $2 }' | head -n 1)
+          CHANGED_DIR=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F/ '{ print $2 }' | head -n 1)
           echo "::set-output name=dir::$CHANGED_DIR"
         
       - name: terraform fmt
