@@ -35,8 +35,7 @@ jobs:
         id: step_two
         run: |
           echo "${{ env.action_state }}"
-          echo "${{ action_state }}"
-        
+          
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed }} | sed 's|^\(modules/[^/]*\).*|\1|'
         
