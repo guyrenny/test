@@ -30,11 +30,12 @@ jobs:
         id: step_one
         run: |
            export action_state=${{steps.get_changed.outputs.changed}}
-           echo $action_stace | sed 's|^\(modules/[^/]*\).*|\1|'>> "$GITHUB_ENV"
+           echo $action_state | sed 's|^\(modules/[^/]*\).*|\1|'>> "$GITHUB_ENV"
       - name: Use the value
         id: step_two
         run: |
           echo "${{ env.action_state }}"
+          echo "${{ action_state }}"
         
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed }} | sed 's|^\(modules/[^/]*\).*|\1|'
