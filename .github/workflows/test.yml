@@ -41,9 +41,8 @@ jobs:
         
       - name: terraform fmt
         uses: dflook/terraform-fmt@v1
-        run: export path= echo "${{ steps.get_changed.outputs.changed }}" | sed 's|^\(modules/[^/]*\).*|\1|'
         with:
-          path: ${{path}}/
+          path: ${{ steps.get_changed.outputs.changed }}/
         
       - name: Terraform Init
         run: terraform init
