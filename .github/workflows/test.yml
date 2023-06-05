@@ -26,12 +26,10 @@ jobs:
           foldersOnly: true 
           format: csv
           
-      - name: create
-        run: |
-          export CHANGED_DIRS=bar
-          echo "::set-output name=dirs::$CHANGED_DIRS"
+      - name: Save state
+        run: echo "{name}={value}" >> $GITHUB_STATE
       - name: test
-        run: echo $CHANGED_DIRS
+        run: echo $GITHUB_STATE
         
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
