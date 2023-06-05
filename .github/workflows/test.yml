@@ -42,11 +42,11 @@ jobs:
       - name: terraform fmt
         uses: dflook/terraform-fmt@v1
         with:
-          path: ${{ steps.get_changed.outputs.changed }}/
+          path: ${{ env.action_state }}/
         
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ steps.get_changed.outputs.changed }} | sed 's|^\(modules/[^/]*\).*|\1|'/
+        working-directory: ${{ env.action_state }}/
 
       - name: Terraform Plan
         run: terraform plan
