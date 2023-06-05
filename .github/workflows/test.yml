@@ -27,9 +27,9 @@ jobs:
           format: csv
           
       - name: Save state
-        run: echo "{name}={value}" >> $GITHUB_STATE
+        run: echo "name=value" >> $GITHUB_STATE
       - name: test
-        run: echo $GITHUB_STATE
+        run: echo "${{ env.name }}"
         
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
