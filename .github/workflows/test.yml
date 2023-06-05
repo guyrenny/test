@@ -36,7 +36,7 @@ jobs:
           echo "${{ env.action_state }}"
         
       - name: Echo changed files
-        run: echo ${{ steps.get_changed.outputs.changed] }} | sed 's|^\(modules/[^/]*\).*|\1|'
+        run: echo ${{ steps.get_changed.outputs.changed }} | sed 's|^\(modules/[^/]*\).*|\1|'
         
       - name: terraform fmt
         uses: dflook/terraform-fmt@v1
