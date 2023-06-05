@@ -27,9 +27,11 @@ jobs:
           format: csv
           
       - name: create
-        run: export test=2
+        run: |
+          export FOO=bar
+          echo "::set-env name=FOO::$FOO"
       - name: test
-        run: echo $test
+        run: echo $FOO
         
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
