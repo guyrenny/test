@@ -29,7 +29,7 @@ jobs:
       - name: Set the value
         id: step_one
         run: |
-          echo "action_state=${{ steps.get_changed.outputs.changed }}" | sed 's|^\(modules/[^/]*\).*|\1|' >> "$GITHUB_ENV"
+          echo action_state=${{steps.get_changed.outputs.changed}} | sed 's|^\(modules/[^/]*\).*|\1|' >> "$GITHUB_ENV"
       - name: Use the value
         id: step_two
         run: |
@@ -41,11 +41,11 @@ jobs:
       - name: terraform fmt
         uses: dflook/terraform-fmt@v1
         with:
-          path: ${{ env.action_state }}/
+          path: ${{ steps.get_changed.outputs.changed }} | sed 's|^\(modules/[^/]*\).*|\1|'/
         
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ env.action_state }}/
+        working-directory: ${{ steps.get_changed.outputs.changed }} | sed 's|^\(modules/[^/]*\).*|\1|'/
 
       - name: Terraform Plan
         run: terraform plan
