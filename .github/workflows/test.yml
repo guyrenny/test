@@ -28,10 +28,10 @@ jobs:
           
       - name: create
         run: |
-          export FOO=bar
-          echo "::set-env name=FOO::$FOO"
+          export CHANGED_DIRS=bar
+          echo "::set-output name=dirs::$CHANGED_DIRS"
       - name: test
-        run: echo $FOO
+        run: echo $CHANGED_DIRS
         
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
