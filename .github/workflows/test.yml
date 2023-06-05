@@ -29,12 +29,11 @@ jobs:
       - name: Set the value
         id: step_one
         run: |
-          echo "action_state=yellow" >> "$GITHUB_ENV"
+          echo "action_state=${{ steps.get_changed.outputs.changed[0] }}" >> "$GITHUB_ENV"
       - name: Use the value
         id: step_two
         run: |
-
-          echo "${{ env.action_state }}" # This will output 'yellow'
+          echo "${{ env.action_state }}"
         
       - name: Echo changed files
         run: echo ${{ steps.get_changed.outputs.changed[0] }} | sed 's|^\(modules/[^/]*\).*|\1|'
