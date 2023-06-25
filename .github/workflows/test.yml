@@ -42,7 +42,8 @@ jobs:
 
           git add .
           git commit -m "Copy file from source repository"
-          git push --set-upstream origin main
+          git push
+          git push --set-upstream origin HEAD
           
       - name: Merge Pull Request
         uses: repo-sync/pull-request@v2
