@@ -4,4 +4,4 @@ terraform {
 output "hello_world2" {
         value =         "Hello, World!"
    
-}
+} 
