@@ -1,54 +1,27 @@
 name: Terraform Testing
 
 on:
-  push:
-    branches:
-      - main
-    paths: 
-      - "modules/**"
-
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master, main]
+    
 jobs:
-  test:
+  check:
+    name: Check
     runs-on: ubuntu-latest
-
+    outputs:
+      packages: ${{ env.packages }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-
-      - uses: Stockopedia/action-get-changed-files@v1
-        id: get_changed
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          ignore: "**/+(.github)"
-          foldersOnly: false 
-          format: csv
-          
-      - name: Set the value
-        id: step_one
-        run: |
-          echo "action_state=$(echo "${{ steps.get_changed.outputs.changed }}" | sed 's|^\(modules/[^/]*\).*|\1|')" >> $GITHUB_ENV
-      
-      - name: Use the value
-        id: step_two
-        run: |
-          echo "${{ env.action_state }}"
-          
-      - name: Echo changed files
-        run: echo ${{ steps.get_changed.outputs.changed }} | sed 's|^\(modules/[^/]*\).*|\1|'
-        
-      - name: terraform fmt
-        uses: dflook/terraform-fmt@v1
-        with:
-          path: ${{ env.action_state }}/
-        
-      - name: Terraform Init
-        run: terraform init
-        working-directory: ${{ env.action_state }}/
+          persist-credentials: false
+          fetch-depth: 0
 
-      - name: Terraform Plan
-        run: terraform plan
-        working-directory: ${{ env.action_state }}/
-        
+      - name: Get changed packages
+        id: get-changed-packages
+        run: |
+          export PACKAGES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha || 'origin/master' }} ${{ github.sha }} modules/ | xargs -n1 dirname | sed -r 's/modules\/([^\/]+).*$/modules\/\1/g' | xargs -n1 basename | sort | uniq | jq -rcnR '[inputs]')
+          echo "packages=$PACKAGES" >> $GITHUB_ENV
+      - name: test
+        run: echo hello
