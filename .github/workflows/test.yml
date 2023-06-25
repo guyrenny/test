@@ -30,7 +30,7 @@ jobs:
           repository: guyrenny/test
           token: ${{ secrets.DESTINATION_REPO_TOKEN }}
           
-      - name: Commit and Push Changes
+      - name: Commit and Push Changes 
         env:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
