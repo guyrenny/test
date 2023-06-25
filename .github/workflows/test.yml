@@ -34,6 +34,9 @@ jobs:
         env:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          
           git add .
           git commit -m "Copy file from source repository"
           git push
