@@ -38,9 +38,11 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           ls
+          git branch
+
           git add .
           git commit -m "Copy file from source repository"
-          git push
+          git push --set-upstream origin main
           
       - name: Merge Pull Request
         uses: repo-sync/pull-request@v2
