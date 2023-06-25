@@ -23,5 +23,22 @@ jobs:
         run: |
           export PACKAGES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha || 'origin/master' }} ${{ github.sha }} modules/ | xargs -n1 dirname | sed -r 's/modules\/([^\/]+).*$/modules\/\1/g' | xargs -n1 basename | sort | uniq | jq -rcnR '[inputs]')
           echo "packages=$PACKAGES" >> $GITHUB_ENV
-      - name: test
-        run: echo hello
+          
+      - name: Checkout Destination Repository
+        uses: actions/checkout@v2
+        with:
+          repository: guyrenny/test
+          token: ${{ secrets.DESTINATION_REPO_TOKEN }}
+          
+      - name: Commit and Push Changes
+        run: |
+          git add .
+          git commit -m "Copy file from source repository"
+          git push
+          
+      - name: Merge Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          sourceBranch: main
+          destinationBranch: main
+          githubToken: ${{ secrets.DESTINATION_REPO_TOKEN }}
