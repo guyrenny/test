@@ -9,7 +9,7 @@ jobs:
   check:
     name: Check
     runs-on: ubuntu-latest 
-    outputs:
+    outputs: 
       packages: ${{ env.packages }} 
     steps:
       - name: Checkout
