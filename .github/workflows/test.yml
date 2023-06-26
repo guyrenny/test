@@ -10,7 +10,7 @@ jobs:
     name: Check
     runs-on: ubuntu-latest
     outputs:
-      packages: ${{ env.packages }}
+      packages: ${{ env.packages }} 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
