@@ -25,21 +25,10 @@ jobs:
           echo "packages=$PACKAGES" >> $GITHUB_ENV
                 
           
-  publish:
-    name: Publish
-    needs: [check]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: ${{ fromJSON(needs.check.outputs.packages) }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3 
-          
       - name: Checkout Destination Repository
         uses: actions/checkout@v2
         with:
-          repository: guyrenny/test
+          repository: guyrenny/test2
           token: ${{ secrets.DESTINATION_REPO_TOKEN }}     
           
       - name: Commit and Push Changes 
@@ -47,7 +36,7 @@ jobs:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
           echo  ${{ env.packages }}
-          cp modules/${{ matrix.package }}/test.tf .
+          cp modules/test/test.tf .
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout main
