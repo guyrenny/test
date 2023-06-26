@@ -38,6 +38,7 @@ jobs:
           git config user.name "guyrenny"
           git config user.email "guy.renny@coralogix.com"  
           ls
+          git checkout main
           git branch
           git pull
           git add .
