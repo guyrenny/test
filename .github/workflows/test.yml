@@ -39,10 +39,11 @@ jobs:
           git config user.email "<>"
           ls
           git branch
-
+          git fetch origin/master
+          git rebase origin/master
           git add .
           git commit -m "Copy file from source repository"
-          git push origin HEAD:main
+          git push origin HEAD:main -f
           
       - name: Merge Pull Request
         uses: repo-sync/pull-request@v2
