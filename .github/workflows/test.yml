@@ -34,12 +34,11 @@ jobs:
         env:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
-          cp modules/test/test.tf .
+          echo  ${{ env.packages }}
+          cp modules/test/test.tf modules/test/test.tf
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          ls
           git checkout main
-          git branch
           git pull
           git add .
           git commit -m "Copy file from source repository"
