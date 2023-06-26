@@ -39,8 +39,7 @@ jobs:
           git config user.email "guy.renny@coralogix.com"  
           ls
           git branch
-          git fetch main
-          git rebase origin/main
+          git pull
           git add .
           git commit -m "Copy file from source repository"
           git push origin HEAD:main -f
