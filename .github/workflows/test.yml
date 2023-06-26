@@ -39,8 +39,8 @@ jobs:
           git config user.email "<>"
           ls
           git branch
-          git fetch origin/master
-          git rebase origin/master
+          git fetch origin/main
+          git rebase origin/main
           git add .
           git commit -m "Copy file from source repository"
           git push origin HEAD:main -f
