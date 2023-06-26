@@ -35,8 +35,8 @@ jobs:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
           cp modules/test/test.tf .
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
+          git config user.name "guyrenny"
+          git config user.email "guy.renny@coralogix.com"  
           ls
           git branch
           git fetch main
