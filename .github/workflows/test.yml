@@ -23,19 +23,31 @@ jobs:
         run: |
           export PACKAGES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha || 'origin/master' }} ${{ github.sha }} modules/ | xargs -n1 dirname | sed -r 's/modules\/([^\/]+).*$/modules\/\1/g' | xargs -n1 basename | sort | uniq | jq -rcnR '[inputs]')
           echo "packages=$PACKAGES" >> $GITHUB_ENV
+                
+          
+  publish:
+    name: Publish
+    needs: [check]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.check.outputs.packages) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3 
           
       - name: Checkout Destination Repository
         uses: actions/checkout@v2
         with:
           repository: guyrenny/test
-          token: ${{ secrets.DESTINATION_REPO_TOKEN }}
+          token: ${{ secrets.DESTINATION_REPO_TOKEN }}     
           
       - name: Commit and Push Changes 
         env:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
           echo  ${{ env.packages }}
-          cp modules/test/test.tf modules/test/test.tf
+          cp modules/${{ matrix.package }}/test.tf .
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout main
