@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    branches-ignore: [master]
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+env:
+  AWS_DEFAULT_REGION: eu-central-1
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ env.packages }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Get Changed Packages
+        id: get-changed-packages
+        run: |
+          export PACKAGES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha || 'origin/master' }} ${{ github.sha }} | xargs -n1 dirname | xargs -n1 basename | sort | uniq | jq -rcnR '[inputs]')
+          echo "packages=$PACKAGES" >> $GITHUB_ENV
+
+  publish:
+    name: Publish
+    needs: [check]
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    env:
+      AWS_SERVERLESS_BUCKET: coralogix-serverless-repo
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.check.outputs.packages) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3 
+
+      - name: Configure AWS credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TESTING_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTING_SECRET_ACCESS_KEY }}
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV 
+
+      - name: Upload to S3
+        run: |
+          if [[ -f "${{ matrix.package }}/template.yml" ]] ; then
+            aws s3 cp  ${{ matrix.package }}/template.yml s3://gr-integrations-aws-testing/${{ matrix.package }}.yml
+          fi
+          if [[ -f "${{ matrix.package }}/template.yaml" ]] ; then
+            aws s3 cp  ${{ matrix.package }}/template.yaml s3://gr-integrations-aws-testing/${{ matrix.package }}.yml
+          fi
