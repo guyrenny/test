@@ -48,8 +48,7 @@ jobs:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
           echo  ${{ env.packages }}
-          mkdir modules/test1
-          mkdir modules/test2
+          mkdir -p modules/test{1,2}
           cp test.tf test2.tf
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
