@@ -24,7 +24,11 @@ jobs:
           export PACKAGES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha || 'origin/master' }} ${{ github.sha }} modules/ | xargs -n1 dirname | sed -r 's/modules\/([^\/]+).*$/modules\/\1/g' | xargs -n1 basename | sort | uniq | jq -rcnR '[inputs]')
           echo "packages=$PACKAGES" >> $GITHUB_ENV
           
-
+      - name: Checkout Destination Repository
+        uses: actions/checkout@v2
+        with:
+          repository: guyrenny/test
+          token: ${{ secrets.DESTINATION_REPO_TOKEN }}
           
       - name: Commit and Push Changes 
         env:
