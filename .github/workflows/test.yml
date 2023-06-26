@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Change-file
-          path: Change-file.tf
+          path: modules/test/test.tf
                 
           
       - name: Checkout Destination Repository
@@ -47,7 +47,7 @@ jobs:
           REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         run: |
           echo  ${{ env.packages }}
-          cp Change-file.tf .
+          cp modules/test/test.tf .
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout main
