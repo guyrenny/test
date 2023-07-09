@@ -16,7 +16,7 @@ Metadata:
       - logs
       - s3
       - vpc
-      - this is a test
+      - this is a tests
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.5
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
