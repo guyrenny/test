@@ -17,6 +17,7 @@ Metadata:
       - logs
       - cloudtrail
       - sns
+      - this is a test
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.2
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
