@@ -14,7 +14,7 @@ Metadata:
     Labels:
       - coralogix
       - logs
-      - s3ssss
+      - s3sssssssssssssssssssapsod
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.24
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
