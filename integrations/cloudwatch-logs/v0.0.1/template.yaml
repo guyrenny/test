@@ -14,7 +14,7 @@ Metadata:
     Labels:
       - coralogix
       - logs
-      - cloudwatch
+      - cloudwatch test test test test
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -48,9 +48,6 @@ Metadata:
         Parameters:
           - SsmEnabled
           - LayerARN
-    ParameterLabels:
-      IntegrationId:
-        default: Integration ID
 Parameters:
   LayerARN:
     Type: String
