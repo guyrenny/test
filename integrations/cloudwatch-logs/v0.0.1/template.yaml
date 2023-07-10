@@ -14,7 +14,7 @@ Metadata:
     Labels:
       - coralogix
       - logs
-      - cloudwatch
+      - cloudwatchs
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -48,9 +48,6 @@ Metadata:
         Parameters:
           - SsmEnabled
           - LayerARN
-    ParameterLabels:
-      IntegrationId:
-        default: Integration ID
 Parameters:
   LayerARN:
     Type: String
@@ -218,7 +215,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: Send CloudWatch logs to Coralogix.
-      CodeUri: .
+      CodeUri:
+        Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
+        Key: cloudwatch-logs.zip
       Policies:
         - SecretsManagerReadWrite
       Handler: index.handler
