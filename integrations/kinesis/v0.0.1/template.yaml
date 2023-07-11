@@ -1,62 +1,21 @@
 #Created automatically from coralogix/coralogix-aws-serverless
-#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/cloudwatch-logs
+#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/kinesis
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Send CloudWatch logs to Coralogix.
+Description: Send Kinesis stream data to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Coralogix-CloudWatch
-    Description: Send CloudWatch logs to Coralogix.
+    Name: Coralogix-Kinesis
+    Description: Send Kinesis stream data to Coralogix com. ewsdfasd
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
     ReadmeUrl: README.md
-    Labels:
-      - coralogix
-      - logs
-      - cloudwatchs
+    Labels: etstestes - coralogix - logs - stream - kinesis test test testsssss
     HomePageUrl: https://coralogix.com
-    SemanticVersion: 1.0.22
+    SemanticVersion: 1.0.12
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
-  AWS::CloudFormation::Interface:
-    ParameterGroups:
-      - Label:
-          default: Coralogix configuration
-        Parameters:
-          - ApplicationName
-          - SubsystemName
-          - ApiKey
-          - CoralogixRegion
-          - CustomDomain
-          - IntegrationId
-      - Label:
-          default: Integration configuration
-        Parameters:
-          - CloudWatchLogGroupName
-          - NotificationEmail
-          - NewlinePattern
-      - Label:
-          default: Lambda configuration
-        Parameters:
-          - FunctionArchitecture
-          - FunctionMemorySize
-          - FunctionTimeout
-          - SamplingRate
-          - BufferCharset
-      - Label:
-          default: Security configuration
-        Parameters:
-          - SsmEnabled
-          - LayerARN
 Parameters:
-  LayerARN:
-    Type: String
-    Description: Coralogix SSM Layer ARN
-    Default: ''
-  SsmEnabled:
-    Type: String
-    Description: store coralogix private_key as a secret. True/False
-    Default: 'False'
   CoralogixRegion:
     Type: String
     Description: The Coralogix location region, possible options are [Europe, Europe2, India, Singapore, US]
@@ -67,9 +26,9 @@ Parameters:
       - Singapore
       - US
     Default: Europe
-  ApiKey:
+  PrivateKey:
     Type: String
-    Description: The Coralogix Api key which is used to validate your authenticity
+    Description: The Coralogix private key which is used to validate your authenticity
     NoEcho: true
   ApplicationName:
     Type: String
@@ -78,7 +37,7 @@ Parameters:
     MaxLength: 64
   SubsystemName:
     Type: String
-    Description: The subsystem name of your application, if left empty will be populated from LogGroup name
+    Description: The subsystem name of your application
     MaxLength: 64
     Default: ''
   NewlinePattern:
@@ -92,17 +51,13 @@ Parameters:
       - utf8
       - ascii
     Default: utf8
-  SamplingRate:
-    Type: Number
-    Description: Send messages with specific rate
-    MinValue: 1
-    Default: 1
-  CloudWatchLogGroupName:
+  KinesisStreamArn:
     Type: String
-    Description: The name of the CloudWatch log group to watch
-    AllowedPattern: '[\.\-_/#A-Za-z0-9]+'
+    Description: The ARN of the Kinesis stream to watch
+    AllowedPattern: 'arn:aws.*:kinesis:.*:\d{12}:stream/.+'
+    ConstraintDescription: The KinesisStreamArn should be valid ARN string
     MinLength: 1
-    MaxLength: 512
+    MaxLength: 2048
   FunctionArchitecture:
     Type: String
     Description: Lambda function architecture, possible options are [x86_64, arm64]
@@ -127,25 +82,33 @@ Parameters:
     Description: Failure notification email address
     MaxLength: 320
     Default: ''
-  CustomDomain:
+  CustomUrl:
     Type: String
-    Description: The Coralogix custom domain
+    Description: The Coralogix custom url
     Default: ''
+  LayerARN:
+    Type: String
+    Description: Coralogix SSM Layer ARN
+    Default: ''
+  SsmEnabled:
+    Type: String
+    Description: store coralogix private_key as a secret. True/False
+    Default: 'False'
   IntegrationId:
     Type: String
     Description: The integration ID to register.
 Mappings:
   CoralogixRegionMap:
     Europe:
-      LogUrl: coralogix.com
+      LogUrl: ingress.coralogix.com
     Europe2:
-      LogUrl: eu2.coralogix.com
+      LogUrl: ingress.eu2.coralogix.com
     India:
-      LogUrl: coralogix.in
+      LogUrl: ingress.coralogix.in
     Singapore:
-      LogUrl: coralogixsg.com
+      LogUrl: ingress.coralogixsg.com
     US:
-      LogUrl: coralogix.us
+      LogUrl: ingress.coralogix.us
 Conditions:
   IsNotificationEnabled:
     Fn::Not:
@@ -160,16 +123,16 @@ Conditions:
     Fn::Equals:
       - Ref: SsmEnabled
       - 'False'
-  IsRegionCustomUrlEmpty: !Not [!Equals [!Ref CustomDomain, ""]]
+  IsRegionCustomUrlEmpty: !Not [!Equals [!Ref CustomUrl, ""]]
 Resources:
   LambdaFunction:
     Condition: IsNotSsmEnabled
     Type: AWS::Serverless::Function
     Properties:
-      Description: Send CloudWatch logs to Coralogix.
+      Description: Send Kinesis stream data to Coralogix.
       CodeUri:
         Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
-        Key: cloudwatch-logs.zip
+        Key: kinesis.zip
       Handler: index.handler
       Runtime: nodejs16.x
       Architectures:
@@ -182,13 +145,10 @@ Resources:
         Variables:
           CORALOGIX_URL: !If
             - IsRegionCustomUrlEmpty
-            - !Sub 'ingress.${CustomDomain}'
-            - !Sub
-              - '${Prefix}${Domain}'
-              - Prefix: ingress.
-                Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
+            - !Ref CustomUrl
+            - !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
           private_key:
-            Ref: ApiKey
+            Ref: PrivateKey
           app_name:
             Ref: ApplicationName
           sub_name:
@@ -197,27 +157,24 @@ Resources:
             Ref: NewlinePattern
           buffer_charset:
             Ref: BufferCharset
-          sampling:
-            Ref: SamplingRate
       EventInvokeConfig:
         DestinationConfig:
           OnFailure:
             Type: SNS
       Events:
-        CloudWatchLogsEvent:
-          Type: CloudWatchLogs
+        KinesisEvent:
+          Type: Kinesis
           Properties:
-            LogGroupName:
-              Ref: CloudWatchLogGroupName
-            FilterPattern: ''
+            Stream:
+              Ref: KinesisStreamArn
+            BatchSize: 10
+            StartingPosition: LATEST
   LambdaFunctionSsm:
     Condition: IsSsmEnabled
     Type: AWS::Serverless::Function
     Properties:
-      Description: Send CloudWatch logs to Coralogix.
-      CodeUri:
-        Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
-        Key: cloudwatch-logs.zip
+      Description: Send Kinesis stream data to Coralogix.
+      CodeUri: .
       Policies:
         - SecretsManagerReadWrite
       Handler: index.handler
@@ -234,11 +191,8 @@ Resources:
         Variables:
           CORALOGIX_URL: !If
             - IsRegionCustomUrlEmpty
-            - !Sub 'ingress.${CustomDomain}'
-            - !Sub
-              - '${Prefix}${Domain}'
-              - Prefix: ingress.
-                Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
+            - !Ref CustomUrl
+            - !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
           AWS_LAMBDA_EXEC_WRAPPER: /opt/wrapper.sh
           app_name:
             Ref: ApplicationName
@@ -248,19 +202,18 @@ Resources:
             Ref: NewlinePattern
           buffer_charset:
             Ref: BufferCharset
-          sampling:
-            Ref: SamplingRate
       EventInvokeConfig:
         DestinationConfig:
           OnFailure:
             Type: SNS
       Events:
-        CloudWatchLogsEvent:
-          Type: CloudWatchLogs
+        KinesisEvent:
+          Type: Kinesis
           Properties:
-            LogGroupName:
-              Ref: CloudWatchLogGroupName
-            FilterPattern: ''
+            Stream:
+              Ref: KinesisStreamArn
+            BatchSize: 10
+            StartingPosition: LATEST
   PrivateKeySecret:
     Condition: IsSsmEnabled
     Type: AWS::SecretsManager::Secret
@@ -269,7 +222,7 @@ Resources:
       Name: !Sub
         - 'lambda/coralogix/${AWS::Region}/${function}'
         - function: !Ref LambdaFunctionSsm
-      SecretString: !Ref ApiKey
+      SecretString: !Ref PrivateKey
   LambdaFunctionNotificationSubscription:
     Type: AWS::SNS::Subscription
     Condition: IsNotificationEnabled
@@ -308,4 +261,3 @@ Resources:
       IntegrationNameField: !Ref "AWS::StackName"
       SubsystemField: !Ref SubsystemName
       ApplicationNameField: !Ref ApplicationName
-      CloudWatchLogGroupNameField: !Ref CloudWatchLogGroupName

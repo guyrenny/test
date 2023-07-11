@@ -5,7 +5,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Send logs from S3 bucket to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Coralogix-S3-via-SNS
+    Name: Coralogix-S3-via-SNS-snsds
     Description: Send logs from S3 bucket to Coralogix via SNS trigger.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
@@ -15,7 +15,7 @@ Metadata:
       - coralogix
       - logs
       - s3
-      - sns
+      - snss
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.27
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -85,7 +85,7 @@ Parameters:
     Type: String
     Description: The Coralogix location region [Europe, Europe2, India, Singapore, US]
     AllowedValues:
-      - Europe
+      - Europe234
       - Europe2
       - India
       - Singapore
@@ -256,18 +256,17 @@ Resources:
         Ref: NotificationEmail
       TopicArn:
         Ref: LambdaFunction.DestinationTopic
-
   # Used as a bridge because CF doesn't allow for conditional depends on clauses.
   NonNotifierResourcesAreReady:
     Type: AWS::CloudFormation::WaitConditionHandle
     Metadata:
       LambdaFunctionNotificationSubscriptionReady: !If [ IsNotificationEnabled, !Ref LambdaFunctionNotificationSubscription, "" ]
-
   IntegrationStatusNotifier:
     Type: Custom::IntegrationsServiceNotifier
     DependsOn:
+      - LambdaFunction
       - NonNotifierResourcesAreReady
-      - LambdaFunction # Can depend on it directly because it's not conditional.
+
     Properties:
       #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
@@ -275,7 +274,7 @@ Resources:
       CoralogixDomain: !If
         - IsRegionCustomUrlEmpty
         - !Ref CustomDomain
-        - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
+        - !FindInMap [ CoralogixDomainMap, !Ref CoralogixRegion, LogUrl ]
       CoralogixApiKey: !Ref PrivateKey
 
       # Parameters to track

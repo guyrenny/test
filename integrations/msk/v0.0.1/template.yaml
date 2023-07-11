@@ -1,12 +1,12 @@
 #Created automatically from coralogix/coralogix-aws-serverless
-#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/cloudtrail-sns
+#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/msk
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Send CloudTrail logs from SNS bucket to Coralogix.
+Description: Send data from Amazon MSK to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Coralogix-CloudTrail-via-SNS-sssasdsdf
-    Description: Send CloudTrail logs from SNS bucket to Coralogix.asdsdfsdf
+    Name: Coralogix-MSK
+    Description: Send data from Amazon MSK to Coralogix.dedscriptionasd
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -14,36 +14,13 @@ Metadata:
     Labels:
       - coralogix
       - logs
-      - cloudtrail
-      - snsss
+      - apache
+      - kafka
+      - mskk
+      - stream
     HomePageUrl: https://coralogix.com
-    SemanticVersion: 1.0.4
+    SemanticVersion: 1.0.8
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
-  AWS::CloudFormation::Interface:
-    ParameterGroups:
-      - Label:
-          default: Coralogix configuration
-        Parameters:
-          - ApplicationName
-          - SubsystemName
-          - ApiKey
-          - CoralogixRegion
-          - CustomDomain
-          - IntegrationId
-      - Label:
-          default: Integration configuration
-        Parameters:
-          - SNSTopicArn
-          - S3BucketName
-          - S3KeyPrefix
-          - S3KeySuffix
-          - NotificationEmail
-      - Label:
-          default: Lambda configuration
-        Parameters:
-          - FunctionArchitecture
-          - FunctionMemorySize
-          - FunctionTimeout
 Parameters:
   CoralogixRegion:
     Type: String
@@ -55,13 +32,9 @@ Parameters:
       - Singapore
       - US
     Default: Europe
-  CustomDomain:
+  PrivateKey:
     Type: String
-    Description: The Coralogix custom domain
-    Default: ''
-  ApiKey:
-    Type: String
-    Description: The Coralogix api key which is used to validate your authenticity
+    Description: The Coralogix private key which is used to validate your authenticity
     NoEcho: true
   ApplicationName:
     Type: String
@@ -71,29 +44,20 @@ Parameters:
   SubsystemName:
     Type: String
     Description: The subsystem name of your application
-    MinLength: 1
     MaxLength: 64
-  SNSTopicArn:
+    Default: ''
+  MSKClusterArn:
     Type: String
-    Description: The ARN of SNS topic to subscribe
+    Description: The ARN of the Amazon MSK Kafka cluster
     MinLength: 20
     MaxLength: 2048
-  S3BucketName:
+  Topic:
     Type: String
-    Description: The name of the S3 bucket with CloudTrail logs to watch
-    AllowedPattern: '^[0-9A-Za-z\.\-_]*(?<!\.)$'
-    MinLength: 3
-    MaxLength: 63
-  S3KeyPrefix:
-    Type: String
-    Description: The S3 path prefix to watch
-    MaxLength: 1024
-    Default: 'AWSLogs/'
-  S3KeySuffix:
-    Type: String
-    Description: The S3 path suffix to watch
-    MaxLength: 1024
-    Default: '.json.gz'
+    Description: The name of the Kafka topic used to store records in your Kafka cluster
+    AllowedPattern: '^[^.]([a-zA-Z0-9\.\-_]+)'
+    ConstraintDescription: Allowed characters a-z, A-Z, 0-9, . (dot), _ (underscore), and - (dash)
+    MinLength: 2
+    MaxLength: 249
   FunctionArchitecture:
     Type: String
     Description: Lambda function architecture, possible options are [x86_64, arm64]
@@ -124,30 +88,29 @@ Parameters:
 Mappings:
   CoralogixRegionMap:
     Europe:
-      LogUrl: coralogix.com
+      LogUrl: ingress.coralogix.com
     Europe2:
-      LogUrl: eu2.coralogix.com
+      LogUrl: ingress.eu2.coralogix.com
     India:
-      LogUrl: coralogix.in
+      LogUrl: ingress.coralogix.in
     Singapore:
-      LogUrl: coralogixsg.com
+      LogUrl: ingress.coralogixsg.com
     US:
-      LogUrl: coralogix.us
+      LogUrl: ingress.coralogix.us
 Conditions:
   IsNotificationEnabled:
     Fn::Not:
       - Fn::Equals:
           - Ref: NotificationEmail
           - ''
-  IsRegionCustomUrlEmpty: !Not [!Equals [!Ref CustomDomain, ""]]
 Resources:
   LambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Description: Send logs from S3 bucket to Coralogix via SNS Trigger.
+      Description: Send data from Amazon MSK to Coralogix.
       CodeUri:
         Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
-        Key: cloudtrail-sns.zip
+        Key: msk.zip
       Handler: index.handler
       Runtime: nodejs16.x
       Architectures:
@@ -158,34 +121,32 @@ Resources:
         Ref: FunctionTimeout
       Environment:
         Variables:
-          CORALOGIX_URL: !If
-            - IsRegionCustomUrlEmpty
-            - !Sub 'https://ingress.${CustomDomain}/api/v1/logs'
-            - !Sub
-              - '${Prefix}${Domain}${Suffix}'
-              - Prefix: https://ingress.
-                Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
-                Suffix: /api/v1/logs
+          CORALOGIX_URL:
+            Fn::FindInMap:
+              - CoralogixRegionMap
+              - Ref: CoralogixRegion
+              - LogUrl
           private_key:
-            Ref: ApiKey
+            Ref: PrivateKey
           app_name:
             Ref: ApplicationName
           sub_name:
             Ref: SubsystemName
-      Events:
-        SNSEvent:
-          Type: SNS
-          Properties:
-            Topic:
-              Ref: SNSTopicArn
+      Policies:
+        - AWSLambdaMSKExecutionRole
       EventInvokeConfig:
         DestinationConfig:
           OnFailure:
             Type: SNS
-      Policies:
-        - S3ReadPolicy:
-            BucketName:
-              Ref: S3BucketName
+      Events:
+        MSKEvent:
+          Type: MSK
+          Properties:
+            Stream:
+              Ref: MSKClusterArn
+            StartingPosition: LATEST
+            Topics:
+              - Ref: Topic
   LambdaFunctionNotificationSubscription:
     Type: AWS::SNS::Subscription
     Condition: IsNotificationEnabled
@@ -220,5 +181,3 @@ Resources:
       IntegrationNameField: !Ref "AWS::StackName"
       SubsystemField: !Ref SubsystemName
       ApplicationNameField: !Ref ApplicationName
-      S3BucketNameField: !Ref S3BucketName
-      SNSTopicArnField: !Ref SNSTopicArn
