@@ -374,4 +374,3 @@ Resources:
       IntegrationNameField: !Ref "AWS::StackName"
       SubsystemField: !Ref SubsystemName
       ApplicationNameField: !Ref ApplicationName
-      S3BucketNameField: !Ref S3BucketName
