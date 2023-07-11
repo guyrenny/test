@@ -448,7 +448,7 @@ Resources:
         - IsRegionCustomUrlEmpty
         - !Ref CustomDomain
         - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
-      CoralogixApiKey: !Ref PrivateKey
+      CoralogixApiKey: !Ref ApiKey
 
       # Parameters to track
       IntegrationNameField: !Ref "AWS::StackName"
