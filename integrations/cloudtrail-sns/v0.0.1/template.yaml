@@ -208,7 +208,7 @@ Resources:
 
     Properties:
       #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
-      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
+      ServiceToken: !Sub "arn:aws:lambda:us-east-1:233273809180:function:integrations-custom-resource-notifier"
       IntegrationId: !Ref IntegrationId
       CoralogixDomain: !If
         - IsRegionCustomUrlEmpty
