@@ -15,7 +15,7 @@ Metadata:
       - coralogix
       - logs
       - cloudtrail
-      - s3ss
+      - s3
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -367,7 +367,7 @@ Resources:
       CoralogixDomain: !If
         - IsRegionCustomUrlEmpty
         - !Ref CustomDomain
-        - !FindInMap [ CoralogixDomainMap, !Ref CoralogixRegion, LogUrl ]
+        - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
       CoralogixApiKey: !Ref PrivateKey
 
       # Parameters to track
