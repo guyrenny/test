@@ -2,10 +2,10 @@
 #Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/vpc-flow-logs
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: AWS Lambda function for sending VPC Flow Logs from an existing S3 bucket to Coralogix
+Description: AWS Lambda function for sending VPC Flow Logs from an existing S3 bucket to Coralogixsadsdfasdxzcdf
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Coralogix-VPC-Flog-Logs-S3
+    Name: Coralogix-VPC-Flog-Logs-S3-s3
     Description: Send logs from S3 bucket to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
@@ -14,8 +14,8 @@ Metadata:
     Labels:
       - coralogix
       - logs
-      - s3
-      - vpcc
+      - s3s
+      - vpc
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.7
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -30,6 +30,7 @@ Metadata:
           - CoralogixRegion
           - CustomDomain
           - Debug
+          - IntegrationId
           - IntegrationId
       - Label:
           default: Integration configuration
@@ -488,7 +489,6 @@ Resources:
                     {},
                     event.get('PhysicalResourceId', context.aws_request_id)
                 )
-
   # Used as a bridge because CF doesn't allow for conditional depends on clauses.
   NonNotifierResourcesAreReady:
     Type: AWS::CloudFormation::WaitConditionHandle
@@ -501,14 +501,14 @@ Resources:
       LambdaFunctionSSMInvokePermissionReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSSMInvokePermission, "" ]
       LambdaSSMTriggerReady: !If [ IsSsmEnabled, !Ref LambdaSSMTrigger, "" ]
       PrivateKeySecretReady: !If [ IsSsmEnabled, !Ref PrivateKeySecret, "" ]
-
   IntegrationStatusNotifier:
     Type: Custom::IntegrationsServiceNotifier
     DependsOn:
+      - CustomResourceLambdaTriggerFunction
       - NonNotifierResourcesAreReady
-      - CustomResourceLambdaTriggerFunction # Can depend on it directly because it's not conditional.
+
     Properties:
-      # {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
+      #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
       IntegrationId: !Ref IntegrationId
       CoralogixDomain: !If
