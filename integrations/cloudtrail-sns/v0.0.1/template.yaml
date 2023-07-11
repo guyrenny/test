@@ -5,8 +5,8 @@ Transform: AWS::Serverless-2016-10-31
 Description: Send CloudTrail logs from SNS bucket to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Coralogix-CloudTrail-via-SNS
-    Description: Send CloudTrail logs from SNS bucket to Coralogix.
+    Name: Coralogix-CloudTrail-via-SNS-sssasdsdf
+    Description: Send CloudTrail logs from SNS bucket to Coralogix.asdsdfsdf
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -15,7 +15,7 @@ Metadata:
       - coralogix
       - logs
       - cloudtrail
-      - sns
+      - snssss
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.4
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -195,20 +195,17 @@ Resources:
         Ref: NotificationEmail
       TopicArn:
         Ref: LambdaFunction.DestinationTopic
- 
   # Used as a bridge because CF doesn't allow for conditional depends on clauses.
   NonNotifierResourcesAreReady:
     Type: AWS::CloudFormation::WaitConditionHandle
     Metadata:
-      LambdaFunctionReady: !If [ IsNotSsmEnabled, !Ref LambdaFunction, "" ]
-      LambdaFunctionSSMReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSSM, "" ]
-      PrivateKeySecretReady: !If [ IsSsmEnabled, !Ref PrivateKeySecret, "" ]
       LambdaFunctionNotificationSubscriptionReady: !If [ IsNotificationEnabled, !Ref LambdaFunctionNotificationSubscription, "" ]
-
   IntegrationStatusNotifier:
     Type: Custom::IntegrationsServiceNotifier
     DependsOn:
+      - LambdaFunction
       - NonNotifierResourcesAreReady
+
     Properties:
       #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
