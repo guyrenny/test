@@ -5,8 +5,8 @@ Transform: AWS::Serverless-2016-10-31
 Description: Send CloudTrail logs from SNS bucket to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Coralogix-CloudTrail-via-SNS-sssasdsdf
-    Description: Send CloudTrail logs from SNS bucket to Coralogix.asdsdfsdf
+    Name: Coralogix-CloudTrail-via-SNS
+    Description: Send CloudTrail logs from SNS bucket to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -15,7 +15,7 @@ Metadata:
       - coralogix
       - logs
       - cloudtrail
-      - snssss
+      - sns
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.4
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -213,7 +213,7 @@ Resources:
       CoralogixDomain: !If
         - IsRegionCustomUrlEmpty
         - !Ref CustomDomain
-        - !FindInMap [ CoralogixDomainMap, !Ref CoralogixRegion, LogUrl ]
+        - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
       CoralogixApiKey: !Ref PrivateKey
 
       # Parameters to track
