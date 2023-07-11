@@ -6,7 +6,7 @@ Description: Send CloudTrail logs from SNS bucket to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-CloudTrail-via-SNS
-    Description: Send CloudTrail logs from SNS bucket to Coralogix.
+    Description: Send CloudTrail logs from SNS bucket to Coralogix
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -214,7 +214,7 @@ Resources:
         - IsRegionCustomUrlEmpty
         - !Ref CustomDomain
         - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
-      CoralogixApiKey: !Ref PrivateKey
+      CoralogixApiKey: !Ref ApiKey
 
       # Parameters to track
       IntegrationNameField: !Ref "AWS::StackName"

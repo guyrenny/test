@@ -2,7 +2,7 @@
 #Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/vpc-flow-logs
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: AWS Lambda function for sending VPC Flow Logs from an existing S3 bucket to Coralogix
+Description: AWS Lambda function for sending VPC Flow Logs from an existing S3 bucket to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-VPC-Flog-Logs-S3
@@ -514,7 +514,7 @@ Resources:
         - IsRegionCustomUrlEmpty
         - !Ref CustomDomain
         - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
-      CoralogixApiKey: !Ref PrivateKey
+      CoralogixApiKey: !Ref ApiKey
 
       # Parameters to track
       IntegrationNameField: !Ref "AWS::StackName"
