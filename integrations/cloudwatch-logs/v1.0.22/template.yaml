@@ -1,12 +1,10 @@
-#Created automatically from coralogix/coralogix-aws-serverless
-#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/cloudwatch-logs
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Send CloudWatch logs to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-CloudWatch
-    Description: Send CloudWatch logs to Coralogix.asd
+    Description: Send CloudWatch logs to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -14,41 +12,10 @@ Metadata:
     Labels:
       - coralogix
       - logs
-      - test 8
       - cloudwatch
     HomePageUrl: https://coralogix.com
-    SemanticVersion: 1.0.22
+    SemanticVersion: 1.0.20
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
-  AWS::CloudFormation::Interface:
-    ParameterGroups:
-      - Label:
-          default: Coralogix configuration
-        Parameters:
-          - ApplicationName
-          - SubsystemName
-          - ApiKey
-          - CoralogixRegion
-          - CustomDomain
-          - IntegrationId
-      - Label:
-          default: Integration configuration
-        Parameters:
-          - CloudWatchLogGroupName
-          - NotificationEmail
-          - NewlinePattern
-      - Label:
-          default: Lambda configuration
-        Parameters:
-          - FunctionArchitecture
-          - FunctionMemorySize
-          - FunctionTimeout
-          - SamplingRate
-          - BufferCharset
-      - Label:
-          default: Security configuration
-        Parameters:
-          - SsmEnabled
-          - LayerARN
 Parameters:
   LayerARN:
     Type: String
@@ -56,7 +23,7 @@ Parameters:
     Default: ''
   SsmEnabled:
     Type: String
-    Description: store coralogix private_key as a secret. True/False
+    Description: Store coralogix private_key as a secret. True/False
     Default: 'False'
   CoralogixRegion:
     Type: String
@@ -68,9 +35,9 @@ Parameters:
       - Singapore
       - US
     Default: Europe
-  ApiKey:
+  PrivateKey:
     Type: String
-    Description: The Coralogix Api key which is used to validate your authenticity
+    Description: The Coralogix private key which is used to validate your authenticity
     NoEcho: true
   ApplicationName:
     Type: String
@@ -132,11 +99,24 @@ Parameters:
     Type: String
     Description: The Coralogix custom domain
     Default: ''
+  # Integration details:
   IntegrationId:
     Type: String
     Description: The integration ID to register.
+
 Mappings:
   CoralogixRegionMap:
+    Europe:
+      LogUrl: ingress.coralogix.com
+    Europe2:
+      LogUrl: ingress.eu2.coralogix.com
+    India:
+      LogUrl: ingress.coralogix.in
+    Singapore:
+      LogUrl: ingress.coralogixsg.com
+    US:
+      LogUrl: ingress.coralogix.us
+  CoralogixDomainMap:
     Europe:
       LogUrl: coralogix.com
     Europe2:
@@ -147,6 +127,7 @@ Mappings:
       LogUrl: coralogixsg.com
     US:
       LogUrl: coralogix.us
+
 Conditions:
   IsNotificationEnabled:
     Fn::Not:
@@ -183,13 +164,10 @@ Resources:
         Variables:
           CORALOGIX_URL: !If
             - IsRegionCustomUrlEmpty
-            - !Sub 'ingress.${CustomDomain}'
-            - !Sub
-              - '${Prefix}${Domain}'
-              - Prefix: ingress.
-                Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
+            - !Sub "ingress.${CustomDomain}"
+            - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
           private_key:
-            Ref: ApiKey
+            Ref: PrivateKey
           app_name:
             Ref: ApplicationName
           sub_name:
@@ -235,11 +213,8 @@ Resources:
         Variables:
           CORALOGIX_URL: !If
             - IsRegionCustomUrlEmpty
-            - !Sub 'ingress.${CustomDomain}'
-            - !Sub
-              - '${Prefix}${Domain}'
-              - Prefix: ingress.
-                Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
+            - !Sub "ingress.${CustomDomain}"
+            - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
           AWS_LAMBDA_EXEC_WRAPPER: /opt/wrapper.sh
           app_name:
             Ref: ApplicationName
@@ -270,7 +245,7 @@ Resources:
       Name: !Sub
         - 'lambda/coralogix/${AWS::Region}/${function}'
         - function: !Ref LambdaFunctionSsm
-      SecretString: !Ref ApiKey
+      SecretString: !Ref PrivateKey
   LambdaFunctionNotificationSubscription:
     Type: AWS::SNS::Subscription
     Condition: IsNotificationEnabled
@@ -278,23 +253,25 @@ Resources:
       Protocol: email
       Endpoint:
         Ref: NotificationEmail
-      TopicArn: !If
+      TopicArn:
+        !If
         - IsSsmEnabled
         - !Ref LambdaFunctionSsm.DestinationTopic
         - !Ref LambdaFunction.DestinationTopic
+
   # Used as a bridge because CF doesn't allow for conditional depends on clauses.
   NonNotifierResourcesAreReady:
     Type: AWS::CloudFormation::WaitConditionHandle
     Metadata:
       LambdaFunctionReady: !If [ IsNotSsmEnabled, !Ref LambdaFunction, "" ]
-      LambdaFunctionSsmReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSsm, "" ]
+      LambdaFunctionSSMReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSsm, "" ]
       PrivateKeySecretReady: !If [ IsSsmEnabled, !Ref PrivateKeySecret, "" ]
       LambdaFunctionNotificationSubscriptionReady: !If [ IsNotificationEnabled, !Ref LambdaFunctionNotificationSubscription, "" ]
+
   IntegrationStatusNotifier:
     Type: Custom::IntegrationsServiceNotifier
     DependsOn:
       - NonNotifierResourcesAreReady
-
     Properties:
       #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
@@ -302,22 +279,11 @@ Resources:
       CoralogixDomain: !If
         - IsRegionCustomUrlEmpty
         - !Ref CustomDomain
-        - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
-      CoralogixApiKey: !Ref ApiKey
+        - !FindInMap [ CoralogixDomainMap, !Ref CoralogixRegion, LogUrl ]
+      CoralogixApiKey: !Ref PrivateKey
 
       # Parameters to track
       IntegrationNameField: !Ref "AWS::StackName"
       SubsystemField: !Ref SubsystemName
       ApplicationNameField: !Ref ApplicationName
-      LayerARNField: !Ref LayerARN
-      SsmEnabledField: !Ref SsmEnabled
-      CoralogixRegionField: !Ref CoralogixRegion
-      NewlinePatternField: !Ref NewlinePattern
-      BufferCharsetField: !Ref BufferCharset
-      SamplingRateField: !Ref SamplingRate
       CloudWatchLogGroupNameField: !Ref CloudWatchLogGroupName
-      FunctionArchitectureField: !Ref FunctionArchitecture
-      FunctionMemorySizeField: !Ref FunctionMemorySize
-      FunctionTimeoutField: !Ref FunctionTimeout
-      NotificationEmailField: !Ref NotificationEmail
-      CustomDomainField: !Ref CustomDomain
