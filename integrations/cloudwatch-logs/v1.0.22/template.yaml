@@ -14,6 +14,7 @@ Metadata:
     Labels:
       - coralogix
       - logs
+      - ahhhhhhh
       - cloudwatch
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22

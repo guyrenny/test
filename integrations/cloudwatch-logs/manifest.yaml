@@ -12,3 +12,6 @@ revisions:
   - revision: 0.0.1
     field_definitions: v0.0.1/fields.yaml
     template: ManagedService
+  - revision: 1.0.22
+    template: !CloudFormationTemplate v1.0.22/template.yaml
+    field_definitions: v1.0.22/fields.yaml
