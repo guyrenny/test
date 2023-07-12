@@ -6,7 +6,7 @@ Description: Send CloudWatch logs to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-CloudWatch
-    Description: Send CloudWatch logs to Coralogix
+    Description: Send CloudWatch logs to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -14,7 +14,7 @@ Metadata:
     Labels:
       - coralogix
       - logs
-      - cloudwatch
+      - cloudwatchs
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -296,7 +296,7 @@ Resources:
 
     Properties:
       #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
-      ServiceToken: !Sub "arn:aws:lambda:us-east-1:233273809180:function:integrations-custom-resource-notifier"
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
       IntegrationId: !Ref IntegrationId
       CoralogixDomain: !If
         - IsRegionCustomUrlEmpty
@@ -308,4 +308,3 @@ Resources:
       IntegrationNameField: !Ref "AWS::StackName"
       SubsystemField: !Ref SubsystemName
       ApplicationNameField: !Ref ApplicationName
-      CloudWatchLogGroupNameField: !Ref CloudWatchLogGroupName
