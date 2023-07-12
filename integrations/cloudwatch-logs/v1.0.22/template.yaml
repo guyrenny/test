@@ -1,12 +1,12 @@
 #Created automatically from coralogix/coralogix-aws-serverless
-#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/cloudtrail
+#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/cloudwatch-logs
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Send CloudTrail logs from S3 bucket to Coralogix.
+Description: Send CloudWatch logs to Coralogix.ss
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Coralogix-CloudTrail
-    Description: Send CloudTrail logs from S3 bucket to Coralogix
+    Name: Coralogix-CloudWatch
+    Description: Send CloudWatch logs to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -14,8 +14,8 @@ Metadata:
     Labels:
       - coralogix
       - logs
+      - another name
       - cloudtrail
-      - s3ss
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -33,22 +33,31 @@ Metadata:
       - Label:
           default: Integration configuration
         Parameters:
-          - S3BucketName
-          - S3KeyPrefix
-          - S3KeySuffix
+          - CloudWatchLogGroupName
           - NotificationEmail
+          - NewlinePattern
       - Label:
           default: Lambda configuration
         Parameters:
           - FunctionArchitecture
           - FunctionMemorySize
           - FunctionTimeout
+          - SamplingRate
+          - BufferCharset
       - Label:
           default: Security configuration
         Parameters:
           - SsmEnabled
           - LayerARN
 Parameters:
+  LayerARN:
+    Type: String
+    Description: Coralogix SSM Layer ARN
+    Default: ''
+  SsmEnabled:
+    Type: String
+    Description: store coralogix private_key as a secret. True/False
+    Default: 'False'
   CoralogixRegion:
     Type: String
     Description: The Coralogix location region, possible options are [Europe, Europe2, India, Singapore, US]
@@ -59,22 +68,10 @@ Parameters:
       - Singapore
       - US
     Default: Europe
-  CustomDomain:
-    Type: String
-    Description: The Coralogix custom domain
-    Default: ''
   ApiKey:
     Type: String
-    Description: The Coralogix api key which is used to validate your authenticity
+    Description: The Coralogix Api key which is used to validate your authenticity
     NoEcho: true
-  LayerARN:
-    Type: String
-    Description: Coralogix SSM Layer ARN
-    Default: ''
-  SsmEnabled:
-    Type: String
-    Description: store coralogix private_key as a secret. True/False
-    Default: 'False'
   ApplicationName:
     Type: String
     Description: The name of your application
@@ -82,25 +79,31 @@ Parameters:
     MaxLength: 64
   SubsystemName:
     Type: String
-    Description: The subsystem name of your application
-    MinLength: 1
+    Description: The subsystem name of your application, if left empty will be populated from LogGroup name
     MaxLength: 64
-  S3BucketName:
+    Default: ''
+  NewlinePattern:
     Type: String
-    Description: The name of the S3 bucket with CloudTrail logs to watch
-    AllowedPattern: '^[0-9A-Za-z\.\-_]*(?<!\.)$'
-    MinLength: 3
-    MaxLength: 63
-  S3KeyPrefix:
+    Description: The pattern for lines splitting
+    Default: '(?:\r\n|\r|\n)'
+  BufferCharset:
     Type: String
-    Description: The S3 path prefix to watch
-    MaxLength: 1024
-    Default: 'AWSLogs/'
-  S3KeySuffix:
+    Description: The charset to use for buffer decoding, possible options are [utf8, ascii]
+    AllowedValues:
+      - utf8
+      - ascii
+    Default: utf8
+  SamplingRate:
+    Type: Number
+    Description: Send messages with specific rate
+    MinValue: 1
+    Default: 1
+  CloudWatchLogGroupName:
     Type: String
-    Description: The S3 path suffix to watch
-    MaxLength: 1024
-    Default: '.json.gz'
+    Description: The name of the CloudWatch log group to watch
+    AllowedPattern: '[\.\-_/#A-Za-z0-9]+'
+    MinLength: 1
+    MaxLength: 512
   FunctionArchitecture:
     Type: String
     Description: Lambda function architecture, possible options are [x86_64, arm64]
@@ -124,6 +127,10 @@ Parameters:
     Type: String
     Description: Failure notification email address
     MaxLength: 320
+    Default: ''
+  CustomDomain:
+    Type: String
+    Description: The Coralogix custom domain
     Default: ''
   IntegrationId:
     Type: String
@@ -160,10 +167,10 @@ Resources:
     Condition: IsNotSsmEnabled
     Type: AWS::Serverless::Function
     Properties:
-      Description: Send CloudTrail logs from S3 bucket to Coralogix.
+      Description: Send CloudWatch logs to Coralogix.
       CodeUri:
         Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
-        Key: cloudtrail.zip
+        Key: cloudwatch-logs.zip
       Handler: index.handler
       Runtime: nodejs16.x
       Architectures:
@@ -176,71 +183,48 @@ Resources:
         Variables:
           CORALOGIX_URL: !If
             - IsRegionCustomUrlEmpty
-            - !Sub 'https://ingress.${CustomDomain}/api/v1/logs'
+            - !Sub 'ingress.${CustomDomain}'
             - !Sub
-              - '${Prefix}${Domain}${Suffix}'
-              - Prefix: https://ingress.
+              - '${Prefix}${Domain}'
+              - Prefix: ingress.
                 Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
-                Suffix: /api/v1/logs
           private_key:
             Ref: ApiKey
           app_name:
             Ref: ApplicationName
           sub_name:
             Ref: SubsystemName
-      Policies:
-        - S3ReadPolicy:
-            BucketName:
-              Ref: S3BucketName
+          newline_pattern:
+            Ref: NewlinePattern
+          buffer_charset:
+            Ref: BufferCharset
+          sampling:
+            Ref: SamplingRate
       EventInvokeConfig:
         DestinationConfig:
           OnFailure:
             Type: SNS
-  LambdaFunctionInvokePermission:
-    Condition: IsNotSsmEnabled
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName:
-        Fn::GetAtt:
-          - LambdaFunction
-          - Arn
-      Action: lambda:InvokeFunction
-      Principal: s3.amazonaws.com
-      SourceAccount:
-        Ref: AWS::AccountId
-      SourceArn:
-        Fn::Sub: "arn:aws:s3:::${S3BucketName}"
-  LambdaTrigger:
-    Condition: IsNotSsmEnabled
-    Type: Custom::LambdaTrigger
-    DependsOn: LambdaFunctionInvokePermission
-    Properties:
-      ServiceToken:
-        Fn::GetAtt:
-          - CustomResourceLambdaTriggerFunction
-          - Arn
-      LambdaArn:
-        Fn::GetAtt:
-          - LambdaFunction
-          - Arn
-      Bucket:
-        Ref: S3BucketName
-      Prefix:
-        Ref: S3KeyPrefix
-      Suffix:
-        Ref: S3KeySuffix
-  LambdaFunctionSSM:
+      Events:
+        CloudWatchLogsEvent:
+          Type: CloudWatchLogs
+          Properties:
+            LogGroupName:
+              Ref: CloudWatchLogGroupName
+            FilterPattern: ''
+  LambdaFunctionSsm:
     Condition: IsSsmEnabled
     Type: AWS::Serverless::Function
     Properties:
-      Description: Send CloudTrail logs from S3 bucket to Coralogix.
+      Description: Send CloudWatch logs to Coralogix.
       CodeUri:
         Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
-        Key: cloudtrail.zip
+        Key: cloudwatch-logs.zip
+      Policies:
+        - SecretsManagerReadWrite
       Handler: index.handler
+      Runtime: nodejs16.x
       Layers:
         - Ref: LayerARN
-      Runtime: nodejs16.x
       Architectures:
         - Ref: FunctionArchitecture
       MemorySize:
@@ -251,26 +235,33 @@ Resources:
         Variables:
           CORALOGIX_URL: !If
             - IsRegionCustomUrlEmpty
-            - !Sub 'https://ingress.${CustomDomain}/api/v1/logs'
+            - !Sub 'ingress.${CustomDomain}'
             - !Sub
-              - '${Prefix}${Domain}${Suffix}'
-              - Prefix: https://ingress.
+              - '${Prefix}${Domain}'
+              - Prefix: ingress.
                 Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
-                Suffix: /api/v1/logs
           AWS_LAMBDA_EXEC_WRAPPER: /opt/wrapper.sh
           app_name:
             Ref: ApplicationName
           sub_name:
             Ref: SubsystemName
-      Policies:
-        - S3ReadPolicy:
-            BucketName:
-              Ref: S3BucketName
-        - SecretsManagerReadWrite
+          newline_pattern:
+            Ref: NewlinePattern
+          buffer_charset:
+            Ref: BufferCharset
+          sampling:
+            Ref: SamplingRate
       EventInvokeConfig:
         DestinationConfig:
           OnFailure:
             Type: SNS
+      Events:
+        CloudWatchLogsEvent:
+          Type: CloudWatchLogs
+          Properties:
+            LogGroupName:
+              Ref: CloudWatchLogGroupName
+            FilterPattern: ''
   PrivateKeySecret:
     Condition: IsSsmEnabled
     Type: AWS::SecretsManager::Secret
@@ -278,59 +269,8 @@ Resources:
       Description: Coralogix Send Your Data key Secret
       Name: !Sub
         - 'lambda/coralogix/${AWS::Region}/${function}'
-        - function: !Ref LambdaFunctionSSM
+        - function: !Ref LambdaFunctionSsm
       SecretString: !Ref ApiKey
-  CustomResourceLambdaTriggerFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri:
-        Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
-        Key: helper.zip
-      Handler: index.lambda_handler
-      Runtime: python3.9
-      Timeout: 50
-      Policies:
-        - Statement:
-            - Sid: S3NotificationPolicy
-              Effect: Allow
-              Action:
-                - s3:GetBucketNotification
-                - s3:PutBucketNotification
-              Resource:
-                Fn::Sub: "arn:aws:s3:::${S3BucketName}"
-  LambdaFunctionSSMInvokePermission:
-    Condition: IsSsmEnabled
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName:
-        Fn::GetAtt:
-          - LambdaFunctionSSM
-          - Arn
-      Action: lambda:InvokeFunction
-      Principal: s3.amazonaws.com
-      SourceAccount:
-        Ref: AWS::AccountId
-      SourceArn:
-        Fn::Sub: "arn:aws:s3:::${S3BucketName}"
-  LambdaSSMTrigger:
-    Condition: IsSsmEnabled
-    Type: Custom::LambdaTrigger
-    DependsOn: LambdaFunctionSSMInvokePermission
-    Properties:
-      ServiceToken:
-        Fn::GetAtt:
-          - CustomResourceLambdaTriggerFunction
-          - Arn
-      LambdaArn:
-        Fn::GetAtt:
-          - LambdaFunctionSSM
-          - Arn
-      Bucket:
-        Ref: S3BucketName
-      Prefix:
-        Ref: S3KeyPrefix
-      Suffix:
-        Ref: S3KeySuffix
   LambdaFunctionNotificationSubscription:
     Type: AWS::SNS::Subscription
     Condition: IsNotificationEnabled
@@ -340,24 +280,19 @@ Resources:
         Ref: NotificationEmail
       TopicArn: !If
         - IsSsmEnabled
-        - !Ref LambdaFunctionSSM.DestinationTopic
+        - !Ref LambdaFunctionSsm.DestinationTopic
         - !Ref LambdaFunction.DestinationTopic
   # Used as a bridge because CF doesn't allow for conditional depends on clauses.
   NonNotifierResourcesAreReady:
     Type: AWS::CloudFormation::WaitConditionHandle
     Metadata:
       LambdaFunctionReady: !If [ IsNotSsmEnabled, !Ref LambdaFunction, "" ]
-      LambdaFunctionInvokePermissionReady: !If [ IsNotSsmEnabled, !Ref LambdaFunctionInvokePermission, "" ]
-      LambdaTriggerReady: !If [ IsNotSsmEnabled, !Ref LambdaTrigger, "" ]
-      LambdaFunctionSSMReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSSM, "" ]
+      LambdaFunctionSsmReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSsm, "" ]
       PrivateKeySecretReady: !If [ IsSsmEnabled, !Ref PrivateKeySecret, "" ]
-      LambdaFunctionSSMInvokePermissionReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSSMInvokePermission, "" ]
-      LambdaSSMTriggerReady: !If [ IsSsmEnabled, !Ref LambdaSSMTrigger, "" ]
       LambdaFunctionNotificationSubscriptionReady: !If [ IsNotificationEnabled, !Ref LambdaFunctionNotificationSubscription, "" ]
   IntegrationStatusNotifier:
     Type: Custom::IntegrationsServiceNotifier
     DependsOn:
-      - CustomResourceLambdaTriggerFunction
       - NonNotifierResourcesAreReady
 
     Properties:
@@ -374,14 +309,15 @@ Resources:
       IntegrationNameField: !Ref "AWS::StackName"
       SubsystemField: !Ref SubsystemName
       ApplicationNameField: !Ref ApplicationName
-      CoralogixRegionField: !Ref CoralogixRegion
-      CustomDomainField: !Ref CustomDomain
       LayerARNField: !Ref LayerARN
       SsmEnabledField: !Ref SsmEnabled
-      S3BucketNameField: !Ref S3BucketName
-      S3KeyPrefixField: !Ref S3KeyPrefix
-      S3KeySuffixField: !Ref S3KeySuffix
+      CoralogixRegionField: !Ref CoralogixRegion
+      NewlinePatternField: !Ref NewlinePattern
+      BufferCharsetField: !Ref BufferCharset
+      SamplingRateField: !Ref SamplingRate
+      CloudWatchLogGroupNameField: !Ref CloudWatchLogGroupName
       FunctionArchitectureField: !Ref FunctionArchitecture
       FunctionMemorySizeField: !Ref FunctionMemorySize
       FunctionTimeoutField: !Ref FunctionTimeout
       NotificationEmailField: !Ref NotificationEmail
+      CustomDomainField: !Ref CustomDomain
