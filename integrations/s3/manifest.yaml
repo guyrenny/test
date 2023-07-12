@@ -1,0 +1,3 @@
+  - revision: 1.0.27
+    template: !CloudFormationTemplate v1.0.27/template.yaml
+    field_definitions: v1.0.27/fields.yaml
