@@ -15,6 +15,7 @@ Metadata:
       - coralogix
       - logs
       - another name
+      - cloud
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
