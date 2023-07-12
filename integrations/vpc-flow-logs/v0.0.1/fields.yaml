@@ -1,0 +1,53 @@
+---
+fields:
+  - name: PrivateKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Api Key
+    placeholder: Your API key
+    options:
+  - name: stackName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AwsVPCFlowLogsS3
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    options:
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with
+    placeholder: Application name
+    options:
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AwsVPCFlowLogs
+    display_name: Subsystem Name
+    tooltip_text: The name of the Subsystem that the integration will be used with
+    placeholder: Subsystem name
+    options:
+  - name: S3BucketName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: S3 Bucket Name
+    tooltip_text: S3 bucket clear of Lambda triggers, receiving the VPC Flow Logs (check docs for more details)
+    placeholder: S3 Bucket Name
+    allowed_pattern: '^[0-9A-Za-z\.\-_]*(?<!\.)$' # Note that as of the time of the commit this has not been implemented yet in integrations service.
+    options:
