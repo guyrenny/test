@@ -1,0 +1,53 @@
+---
+fields:
+  - name: PrivateKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Api Key
+    placeholder: Your API key
+    options:
+  - name: stackName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: CloudWatch
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    options:
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: "The name of your application. You can use a log field. Use following syntax: $.my_log.field"
+    placeholder: Application name
+    options:
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: CloudWatch
+    display_name: Subsystem Name
+    tooltip_text: "The subsystem name of your application. You can use a log field. Use following syntax: $.my_log.field"
+    placeholder: Subsystem name
+    options:
+  - name: CloudWatchLogGroupName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: CloudWatch Log Group Name
+    tooltip_text: Has to contain one log group name from the set of log groups you would like to forward to Coralogix
+    placeholder: CloudWatch Log Group Name
+    allowed_pattern: '[\.\-_/#A-Za-z0-9]+' # Note that as of the time of the commit this has not been implemented yet in integrations service.
+    options:
