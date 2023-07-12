@@ -6,7 +6,7 @@ Description: Send CloudWatch logs to Coralogix.
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-CloudWatch
-    Description: Send CloudWatch logs to Coralogix
+    Description: Send CloudWatch logs to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
