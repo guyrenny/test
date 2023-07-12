@@ -1,0 +1,19 @@
+definition:
+  short_name: CloudWatch-Logs-S3
+  name: AWS CloudWatch via S3
+  description: "Amazon CloudWatch collects and visualizes real-time logs, metrics, and event data in automated dashboards to streamline your infrastructure and application maintenance. Send these to Coralogix to enhance your data management, analysis, and monitoring capabilities. Visit <a href='https://coralogix.com/docs/aws-cloudwatch-integration-options/'>this page</a> to learn about all available methods for collecting logs and metrics from Amazon CloudWatch."
+  icon_details:
+    light: "/assets/integrations/cloudwatch.svg"
+    dark_icon:
+  tags:
+    - AWS
+    - CloudWatch
+    - Logs
+    - S3
+  details:
+    - name: CloudWatch
+      url: https://coralogix.com/docs/aws-cloudwatch-integration-options/
+revisions:
+  - revision: 0.0.1
+    template: !CloudFormationTemplate v0.0.1/template.yaml
+    field_definitions: v0.0.1/fields.yaml
