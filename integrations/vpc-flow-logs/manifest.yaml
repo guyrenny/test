@@ -44,3 +44,6 @@ revisions:
   - revision: 1.0.7
     template: !CloudFormationTemplate v1.0.7/template.yaml
     field_definitions: v1.0.7/fields.yaml
+  - revision: 1.0.7
+    template: !CloudFormationTemplate v1.0.7/template.yaml
+    field_definitions: v1.0.7/fields.yaml
