@@ -2,11 +2,11 @@
 #Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/s3
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Send logs from S3 bucket to Coralogix.
+Description: Send logs from S3 bucket to Coralogix..
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-S3
-    Description: Send logs from S3 bucket to Coralogix
+    Description: Send logs from S3 bucket to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -15,7 +15,6 @@ Metadata:
       - coralogix
       - logs
       - s3
-      - s 1234
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.27
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
