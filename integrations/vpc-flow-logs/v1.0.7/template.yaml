@@ -16,7 +16,6 @@ Metadata:
       - logs
       - s3
       - vpc
-      - test 1234
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.7
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -397,7 +396,7 @@ Resources:
         - 'lambda/coralogix/${AWS::Region}/${function}'
         - function: !Ref LambdaFunctionSSM
       SecretString: !Ref ApiKey
-  # define a custom resource to create the trigger
+  # define a custom resource to create the trigger.
   CustomResourceLambdaTriggerFunction:
     Type: AWS::Serverless::Function
     Properties:
