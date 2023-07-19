@@ -2,7 +2,7 @@
 #Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/resource-metadata
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: Send resource metadata to Coralogix
+Description: Send resource metadata to  Coralogix
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-Resource-Metadata
