@@ -1,5 +1,5 @@
 definition:
-  short_name: VPC-Flow-Logs-S3
+  short_name: VPC-Flow-Logs-S3 
   name: AWS VPC Flow via S3
   description: "
     VPC Flow Logs is an AWS feature that enables you to capture information about the IP traffic 
