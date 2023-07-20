@@ -1,12 +1,13 @@
 #Created automatically from coralogix/coralogix-aws-serverless
 #Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/cloudtrail
-AWSTemplateFormatVersion: '2010-09-09'
+# test testtest test test test testtesttestsettestetesttesdfghdfrthwerasdewqfqwefsdfgasdasdftesttestwerdsfssdfgertw
+AWSTemplateFormat Version: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Send CloudTrail logs from S3 bucket to Coralogix.
+Description: Send CloudTrail logs from S3 bucket to Coralogix
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-CloudTrail
-    Description: Send CloudTrail logs from S3 bucket to Coralogix
+    Description: Send CloudTrail logs from S3 bucket to Coralogix.
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -16,7 +17,6 @@ Metadata:
       - logs
       - cloudtrail
       - s3
-      - test 9
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.22
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
