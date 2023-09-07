@@ -3,7 +3,7 @@ definition:
   name: AWS VPC Flow via S3
   description: "
     VPC Flow Logs is an AWS feature that enables you to capture information about the IP traffic 
-    going to and from network interfaces in your VPC. Send your VPC Flow Logs to Coralogix to enhance 
+    going to and from network interfaces in your VPC. Send your VPC Flow Logs to Coralogix to enhance  
     your data management, analysis, and monitoring capabilities. Visit 
     <a href='https://coralogix.com/docs/aws-vpc-flow-logs-collection-options/'>this page</a> to learn about all 
     available methods for collecting your VPC Flow Logs.
