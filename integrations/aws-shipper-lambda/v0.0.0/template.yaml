@@ -4,7 +4,7 @@ Description: Send logs to Coralogix from AWS, (S3, SNS, Cloudwatch and more)
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-Logs
-    Description: Send logs to Coralogix.
+    Description: Send logs to Coralogix..
     Author: Coralogix
     SpdxLicenseId: Apache-2.0
     LicenseUrl: LICENSE
@@ -572,32 +572,36 @@ Resources:
         ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
         IntegrationId: !Ref IntegrationId
         CoralogixRegion: !If
-          - IsRegionCustomUrlEmpty
-          - !Ref CustomDomain
-          - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
+          - IsCustomDomain
+          - !Sub
+            - https://ingress.
+            - {domain: !Ref CustomDomain}
+          - !Sub
+            - https://ingress.
+            - {domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, Domain]}
         CoralogixApiKey: !If
-          - IsSecretArn
-          - !GetAtt MySecretApi.SecretString
+          - StoreAPIKeyInSecretsManager
+          - !Ref Secret
           - !Ref ApiKey
 
         # Parameters to track
         IntegrationNameField: !Ref "AWS::StackName"
         SubsystemField: !Ref SubsystemName
         ApplicationNameField: !Ref ApplicationName
-      CoralogixRegionField: !Ref CoralogixRegion
-      CustomDomainField: !Ref CustomDomain
-      NewlinePatternField: !Ref NewlinePattern
-      BlockingPatternField: !Ref BlockingPattern
-      SamplingRateField: !Ref SamplingRate
-      LogLevelField: !Ref LogLevel
-      S3BucketNameField: !Ref S3BucketName
-      S3KeyPrefixField: !Ref S3KeyPrefix
-      S3KeySuffixField: !Ref S3KeySuffix
-      FunctionMemorySizeField: !Ref FunctionMemorySize
-      FunctionTimeoutField: !Ref FunctionTimeout
-      SNSTopicArnField: !Ref SNSTopicArn
-      IntegrationTypeField: !Ref IntegrationType
-      CloudWatchLogGroupNameField: !Ref CloudWatchLogGroupName
-      LambdaLogRetentionField: !Ref LambdaLogRetention
-      NotificationEmailField: !Ref NotificationEmail
-      StoreAPIKeyInSecretsManagerField: !Ref StoreAPIKeyInSecretsManager
+        CoralogixRegionField: !Ref CoralogixRegion
+        CustomDomainField: !Ref CustomDomain
+        NewlinePatternField: !Ref NewlinePattern
+        BlockingPatternField: !Ref BlockingPattern
+        SamplingRateField: !Ref SamplingRate
+        LogLevelField: !Ref LogLevel
+        S3BucketNameField: !Ref S3BucketName
+        S3KeyPrefixField: !Ref S3KeyPrefix
+        S3KeySuffixField: !Ref S3KeySuffix
+        FunctionMemorySizeField: !Ref FunctionMemorySize
+        FunctionTimeoutField: !Ref FunctionTimeout
+        SNSTopicArnField: !Ref SNSTopicArn
+        IntegrationTypeField: !Ref IntegrationType
+        CloudWatchLogGroupNameField: !Ref CloudWatchLogGroupName
+        LambdaLogRetentionField: !Ref LambdaLogRetention
+        NotificationEmailField: !Ref NotificationEmail
+        StoreAPIKeyInSecretsManagerField: !Ref StoreAPIKeyInSecretsManager
