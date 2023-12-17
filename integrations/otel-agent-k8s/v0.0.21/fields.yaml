@@ -1,0 +1,38 @@
+---
+fields:
+  - name: PrivateKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder: Your API key
+  - name: CollectorName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: otel-collector-for-k8s
+    display_name: OpenTelemetry Collector Name
+    tooltip_text:
+    placeholder: OpenTelemetry Collector Name
+  - name: ApplicationName
+    visible: false
+    required: true
+    predefined: true
+    type: text
+    default_value: otel
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: false
+    required: true
+    predefined: true
+    type: text
+    default_value: integration
+    display_name: Subsystem Name
+    tooltip_text: The name of the Subsystem that the integration will be used with.
+    placeholder: Subsystem name
