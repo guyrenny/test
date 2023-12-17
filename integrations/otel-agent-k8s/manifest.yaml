@@ -1,1 +1,8 @@
 file
+    - revision: 0.0.44
+      template:
+        type: HelmChart
+        commands: v0.0.44/commands.yaml
+        integration_guide: v0.0.44/integration_guide.yaml
+      field_definitions: v0.0.44/fields.yaml
+      published_at: 2023-12-17T12:41:25Z

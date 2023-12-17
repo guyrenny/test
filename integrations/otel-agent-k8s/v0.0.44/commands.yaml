@@ -1,0 +1,29 @@
+---
+commands:
+  - name: AddHelmRepository
+    language: bash
+    command: |
+      helm repo add coralogix https://cgx.jfrog.io/artifactory/coralogix-charts-virtual
+      helm repo update
+    description: "To create the Coralogix Helm repository, please run the following command:"
+  - name: HelmVersionCheck
+    language: bash
+    command: helm version
+    description: |
+      Before setting up the integration, make sure you run the installation with Helm v3.9+.
+      <br>To check the version run the following command:
+  - name: InstallHelmChart
+    language: bash
+    command: helm upgrade --install otel-coralogix-integration coralogix/otel-integration --version=$template_version --render-subchart-notes --set global.domain="{{coralogix_domain}}" --set global.clusterName="<cluster name>"
+    description: |
+      Once you created the secret in your kubernetes cluster, run the following command:
+      <br>Verify you replace the &lt;cluster name&gt; with your cluster name.
+    tooltip_text: A Kubernetes cluster is a logical grouping of physical or virtual machines (nodes) that work together as a unified system to host and manage containerized applications. Input the correct values for your orchestration.
+  - name: DeleteHelmChart
+    language: bash
+    command: helm delete otel-coralogix-integration
+    description: "In order to remove the installed collector, you should run the following command:"
+  - name: "AddOpentelemetryApiKeySecret"
+    language: bash
+    command: kubectl create secret generic coralogix-keys --from-literal=PRIVATE_KEY="{{api_key}}"
+    description: "Before setting up the integration, make sure your kubernetes secret named coralogix-keys, with the key PRIVATE_KEY is present in your cluster. If the secret is not present with this key, create it by running the following kubectl command:"
