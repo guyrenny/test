@@ -1,0 +1,5 @@
+---
+introduction: |
+  Utilizing OpenTelemetry, we ensure seamless and automated data collection from various components of your stack. This enables you to not just monitor infrastructure health but also gain insights into application behavior and inter-service dependencies. Troubleshoot issues, optimize performance, and manage your cluster more effectively with a 360-degree view of your Kubernetes ecosystem.
+installation_requirements: |
+  If you have previously installed the <a target='_blank' href='https://coralogix.com/docs/opentelemetry-using-kubernetes/'>Coralogix Exporter</a> or <a target='_blank' href='https://coralogix.com/docs/kubernetes-collector/'>Kubernetes Infrastructure Monitoring</a>, please ensure that those installations are removed before proceeding with the installation of the collector.
