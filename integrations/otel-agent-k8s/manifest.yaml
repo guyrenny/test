@@ -1,1 +1,42 @@
-file
+definition:
+  short_name: otel-agent-k8s
+  name: Kubernetes Complete Observability
+  description: |
+    Coralogix’s Kubernetes Complete Observability provides a comprehensive solution for full-stack observability in your Kubernetes environment. View all of your nodes, pods and cluster metrics, pod logs, and k8s events, as well as your distributed traces pipeline. Take advantage of our <a href='https://coralogix.com/docs/kubernetes-dashboard/'>Kubernetes Dashboard</a> using out pre-configured OpenTelemetry Collector.
+  icon_details:
+    light: "/assets/integrations/k8s.svg"
+  tags:
+    - Kubernetes
+    - OpenTelemetry
+    - Infrastructure
+    - Helm
+  details:
+    - name: the Kubernetes Complete Observability
+      url: https://coralogix.com/docs/otel-collector-for-k8s/
+revisions:
+  - revision: 0.0.21
+    template:
+      type: HelmChart
+      commands: v0.0.21/commands.yaml
+      integration_guide: v0.0.21/integration_guide.yaml
+    field_definitions: v0.0.21/fields.yaml
+  - revision: 0.0.36
+    template:
+      type: HelmChart
+      commands: v0.0.36/commands.yaml
+      integration_guide: v0.0.36/integration_guide.yaml
+    field_definitions: v0.0.36/fields.yaml
+  - revision: 0.0.38
+    template:
+      type: HelmChart
+      commands: v0.0.38/commands.yaml
+      integration_guide: v0.0.38/integration_guide.yaml
+    field_definitions: v0.0.38/fields.yaml
+    published_at: 2023-11-30T00:00:00Z
+  - revision: 0.0.21
+    template:
+      type: HelmChart
+      commands: v0.0.21/commands.yaml
+      integration_guide: v0.0.21/integration_guide.yaml
+    field_definitions: v0.0.21/fields.yaml
+    published_at: 2023-12-13T00:00:00Z
