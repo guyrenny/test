@@ -1,0 +1,14 @@
+name: coralogix-aws-shipper tests
+on:
+  workflow_run:
+    workflows: ["test2"]
+    types:
+      - completed
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run
+        run: echo 1
+              
+      
