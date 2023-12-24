@@ -1,6 +1,10 @@
 name: test2
 on:
   push:
+    branches:
+      - master
+    paths:
+      - 'meta.yaml'
 jobs:
   test:
     runs-on: ubuntu-latest
