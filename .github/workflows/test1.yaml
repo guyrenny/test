@@ -4,6 +4,9 @@ on:
     workflows: ["test2"]
     types:
       - completed
+  push:
+    paths:
+      - 'README.md'
 jobs:
   test:
     runs-on: ubuntu-latest
