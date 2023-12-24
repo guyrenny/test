@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: run
-        run: echo 1/0
+        run: echo $(1/0)
       
               
       
