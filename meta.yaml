@@ -3,3 +3,4 @@ name: integration-definitions
 namespace: ingestion
 deployable_type: application
 tests: false
+
