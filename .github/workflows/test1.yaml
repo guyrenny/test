@@ -1,7 +1,7 @@
 name: coralogix-aws-shipper tests
 on:
   workflow_run:
-    workflows: ["test2"]
+    workflows: ["test 232"]
     types:
       - completed
   push:
