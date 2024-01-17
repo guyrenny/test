@@ -80,6 +80,10 @@ Metadata:
           - SamplingRate
           - AddMetadata
       - Label:
+          default: Kinesis configuration
+        Parameters:
+          - KinesisStreamArn
+      - Label:
           default: Lambda configuration
         Parameters:
           - FunctionMemorySize
