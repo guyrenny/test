@@ -1,5 +1,6 @@
 #Created automatically from coralogix/coralogix-aws-shipper
 #Link to the repo: https://github.com/coralogix/coralogix-aws-shipper/tree/masterAWSTemplateFormatVersion: '2010-09-09'
+n 
 Transform: AWS::Serverless-2016-10-31
 Description: |
   Send logs to Coralogix from AWS, (S3, SNS, Cloudwatch and more)
@@ -37,7 +38,6 @@ Metadata:
           - SubsystemName
           - ApiKey
           - StoreAPIKeyInSecretsManager
-          - IntegrationId
       - Label:
           default: S3/CloudTrail/VpcFlow/S3Csv configuration
         Parameters:
@@ -224,9 +224,6 @@ Parameters:
       - true
       - false
     Default: false
-  IntegrationId:
-    Type: String
-    Description: The integration ID to register.
 Mappings:
   CoralogixRegionMap:
     Europe:
@@ -290,7 +287,6 @@ Conditions:
   UseSNSTopicARNWithNotification: !And
     - !Condition UseSNSTopicARN
     - !Condition IsNotificationEnabled
-  IsApiKeySecretArn: !Not [!Equals [!Ref ApiKey , !Select [0,!Split [":" , !Ref ApiKey]]]]
 Rules:
   ValidateCloudWatchLogs:
     RuleCondition: !And
@@ -704,26 +700,9 @@ Resources:
   NonNotifierResourcesAreReady:
     Type: AWS::CloudFormation::WaitConditionHandle
     Metadata:
-      SecretReady: !If [StoreAPIKeyInSecretsManager, !Ref Secret, ""]
-      LambdaFunctionDefaultReady: !If [UseDefault, !Ref LambdaFunctionDefault, ""]
-      LambdaLogGroupDefaultReady: !If [UseDefault, !Ref LambdaLogGroupDefault, ""]
-      LambdaFunctionInvokePermissionDefaultReady: !If [UseDefault, !Ref LambdaFunctionInvokePermissionDefault, ""]
-      LambdaTriggerDefaultReady: !If [UseDefault, !Ref LambdaTriggerDefault, ""]
-      LambdaFunctionNotificationSubscriptionDefaultReady: !If [UseDefaultWithNotification, !Ref LambdaFunctionNotificationSubscriptionDefault, ""]
-      LambdaFunctionWithSNSTopicReady: !If [UseSNSTopicARN, !Ref LambdaFunctionWithSNSTopic, ""]
-      LambdaLogGroupWithSNSTopicReady: !If [UseSNSTopicARN, !Ref LambdaLogGroupWithSNSTopic, ""]
-      LambdaFunctionInvokePermissionWithSNSTopicReady: !If [UseSNSTopicARN, !Ref LambdaFunctionInvokePermissionWithSNSTopic, ""]
-      LambdaFunctionNotificationSubscriptionWithSNSTopicReady: !If [UseSNSTopicARNWithNotification, !Ref LambdaFunctionNotificationSubscriptionWithSNSTopic, ""]
-      LambdaFunctionCloudwatchLogsReady: !If [UseCloudwatchLogs, !Ref LambdaFunctionCloudwatchLogs, ""]
-      LambdaLogGroupCloudwatchLogsReady: !If [UseCloudwatchLogs, !Ref LambdaLogGroupCloudwatchLogs, ""]
-      LambdaFunctionNotificationSubscriptionCloudwatchLogsReady: !If [UseCloudwatchLogsWithNotification, !Ref LambdaFunctionNotificationSubscriptionCloudwatchLogs, ""]
-      LambdaTriggerCloudwatchLogsReady: !If [UseCloudwatchLogs, !Ref LambdaTriggerCloudwatchLogs, ""]
-      LambdaFunctionInvokePermissionCloudwatchLogsReady: !If [UseCloudwatchLogs, !Ref LambdaFunctionInvokePermissionCloudwatchLogs, ""]
   IntegrationStatusNotifier:
     Type: Custom::IntegrationsServiceNotifier
     DependsOn:
-      - CustomResourceLambdaTriggerFunction
-      - NonNotifierResourcesAreReady
 
     Properties:
       #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
@@ -749,25 +728,4 @@ Resources:
       IntegrationNameField: !Ref "AWS::StackName"
       SubsystemField: !Ref SubsystemName
       ApplicationNameField: !Ref ApplicationName
-      CoralogixRegionField: !Ref CoralogixRegion
-      CustomDomainField: !Ref CustomDomain
-      NewlinePatternField: !Ref NewlinePattern
-      BlockingPatternField: !Ref BlockingPattern
-      SamplingRateField: !Ref SamplingRate
-      LogLevelField: !Ref LogLevel
-      S3BucketNameField: !Ref S3BucketName
-      CSVDelimiterField: !Ref CSVDelimiter
-      S3KeyPrefixField: !Ref S3KeyPrefix
-      S3KeySuffixField: !Ref S3KeySuffix
-      FunctionMemorySizeField: !Ref FunctionMemorySize
-      FunctionTimeoutField: !Ref FunctionTimeout
-      SNSTopicArnField: !Ref SNSTopicArn
-      SNSIntegrationTopicArnField: !Ref SNSIntegrationTopicArn
-      IntegrationTypeField: !Ref IntegrationType
-      CloudWatchLogGroupNameField: !Ref CloudWatchLogGroupName
-      LambdaLogRetentionField: !Ref LambdaLogRetention
-      NotificationEmailField: !Ref NotificationEmail
-      StoreAPIKeyInSecretsManagerField: !Ref StoreAPIKeyInSecretsManager
-      LambdaSubnetIDField: !Ref LambdaSubnetID
-      LambdaSecurityGroupIDField: !Ref LambdaSecurityGroupID
-      UsePrivateLinkField: !Ref UsePrivateLink
+      Field: !Ref 
