@@ -1,6 +1,5 @@
-#Created automatically from coralogix/coralogix-aws-serverless
-#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/
-AWSTemplateFormatVersion: '2010-09-09'
+#Created automatically from coralogix/coralogix-aws-shipper
+#Link to the repo: https://github.com/coralogix/coralogix-aws-shipper/tree/masterAWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: |
   Send logs to Coralogix from AWS, (S3, SNS, Cloudwatch and more)
