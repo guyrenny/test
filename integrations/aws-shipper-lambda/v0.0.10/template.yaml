@@ -57,10 +57,6 @@ Metadata:
         Parameters:
           - CloudWatchLogGroupName
       - Label:
-          default: Kinesis configuration
-        Parameters:
-          - KinesisStreamArn
-      - Label:
           default: SNS configuration
         Parameters:
           - SNSIntegrationTopicArn
@@ -79,10 +75,6 @@ Metadata:
           - BlockingPattern
           - SamplingRate
           - AddMetadata
-      - Label:
-          default: Kinesis configuration
-        Parameters:
-          - KinesisStreamArn
       - Label:
           default: Lambda configuration
         Parameters:
