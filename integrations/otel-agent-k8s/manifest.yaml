@@ -40,3 +40,10 @@ revisions:
       integration_guide: v0.0.21/integration_guide.yaml
     field_definitions: v0.0.21/fields.yaml
     published_at: 2023-12-13T00:00:00Z
+  - revision: 0.0.102
+    template:
+      type: HelmChart
+      commands: v0.0.102/commands.yaml
+      integration_guide: v0.0.102/integration_guide.yaml
+    field_definitions: v0.0.102/fields.yaml
+    published_at: 2024-01-24T15:41:28Z
