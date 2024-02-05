@@ -2,10 +2,9 @@ name: integrations files update
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened,updated]
     paths:
       - 'integrations/shared/aws-shipper/**/template.yaml'
-  push:
        
   workflow_dispatch:
 
