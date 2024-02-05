@@ -53,7 +53,8 @@ jobs:
           
       - name: Get template version 
         run: |
-          if [[ ${{ steps.abc.outputs.all }} =~ v([0-9]+\.[0-9]+\.[0-9]+_[0-9]+)/template.yaml ]]; then 
+          changed_files=${{ steps.abc.outputs.all }}
+          if [[  $changed_files =~ v([0-9]+\.[0-9]+\.[0-9]+_[0-9]+)/template.yaml ]]; then 
             template_version="${BASH_REMATCH[1]}"
             echo "template_version=$template_version" >> $GITHUB_ENV
           fi
