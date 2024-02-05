@@ -29,9 +29,10 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git pull origin master
+          echo fetch
           git fetch origin
+          echo switch
           git switch $branch_name --track origin/master 
-          sync_branch_exists=$(git ls-remote --heads origin "${branch_name}" | wc -l)
           # need to check if i need this condition
           git pull origin ${branch_name} --rebase
       
