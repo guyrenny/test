@@ -1,0 +1,88 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AzureEventHub
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: PrivateKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder_text: API key
+  - name: CoralogixApplication
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Azure
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: CoralogixSubsystem
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: EventHub
+    display_name: Subsystem Name
+    tooltip_text: The subsystem name you wish to allocate to this log shipper (a good
+      starting point may be your AWS account ID).
+    placeholder: Subsystem name
+  - name: EventhubResourceGroup
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: ""
+    display_name: Eventhub Resource Group
+    tooltip_text: Name of the resource group that contains the Event Hub.
+    placeholder: EventHub Resource Group
+  - name: EventhubNamespace
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: ""
+    display_name: EventHub Namespace
+    tooltip_text: Name of the Event Hub namespace.
+    placeholder: EventHub Namespace
+  - name: EventhubInstanceName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: ""
+    display_name: EventHub Instance Name
+    tooltip_text: Name of the Event Hub instance to be monitored.
+    placeholder: EventHub Instance Name
+  - name: EventhubSharedAccessKeyName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: ""
+    display_name: EventHub Shared Access Key Name
+    tooltip_text: Name of the shared access policy of the Event Hub namespace.
+    placeholder: EventHub Shared Access Key Name
+  - name: FunctionAppServicePlanType
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: "Consumption"
+    display_name: Function App Service Plan Type
+    tooltip_text: Type of service plan to use for the integration. Consumption is cheapest with support for ‘public’ Event Hubs. Use Premium if you need to use VNet to configure access to restricted Event Hubs.
+    placeholder: Function App Service Plan Type
+    options:
+      - "Consumption"
+      - "Premium"

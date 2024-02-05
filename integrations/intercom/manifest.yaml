@@ -1,0 +1,17 @@
+definition:
+  short_name: intercom
+  name: Intercom
+  description: Companies that use Intercom for customer relations can ingest Intercom events in their logs, in order to correlate them with other events in their systems, and then seamlessly send them to Coralogix. This can be achieved by creating a private Intercom “application” (that is not much more than a webhook, as you will see) in their workspaces.
+  icon_details:
+    light: "assets/integrations/intercom.svg"
+  tags:
+    - Push
+    - Intercom
+  details:
+    - name: Intercom
+      url: https://coralogix.com/docs/intercom-logs/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

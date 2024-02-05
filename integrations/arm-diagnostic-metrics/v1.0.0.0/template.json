@@ -1,0 +1,254 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "CoralogixPrivateKey": {
+            "type": "string",
+            "defaultValue": "{{CoralogixPrivateKey}}",
+            "allowedValues": [
+                "{{CoralogixPrivateKey}}"
+            ],
+            "metadata": {
+                "description": "The private key of the Coralogix account."
+            }
+        },
+        "CoralogixApplication": {
+            "type": "string",
+            "defaultValue": "{{CoralogixApplication}}",
+            "allowedValues": [
+                "{{CoralogixApplication}}"
+            ],
+            "metadata": {
+                "description": "The name of the Application in Coralogix."
+            }
+        },
+        "CoralogixSubsystem": {
+            "type": "string",
+            "defaultValue": "{{CoralogixSubsystem}}",
+            "allowedValues": [
+                "{{CoralogixSubsystem}}"
+            ],
+            "metadata": {
+                "description": "The name of the Subsystem in Coralogix."
+            }
+        },
+        "EventhubResourceGroup": {
+            "type": "string",
+            "defaultValue": "{{EventhubResourceGroup}}",
+            "allowedValues": [
+                "{{EventhubResourceGroup}}"
+            ],
+            "metadata": {
+                "description": "The name of the Resource Group that contains the EventHub."
+            }
+        },
+        "EventhubNamespace": {
+            "type": "string",
+            "defaultValue": "{{EventhubNamespace}}",
+            "allowedValues": [
+                "{{EventhubNamespace}}"
+            ],
+            "metadata": {
+                "description": "The name of the EventHub Namespace."
+            }
+        },
+        "EventhubInstanceName": {
+            "type": "string",
+            "defaultValue": "{{EventhubInstanceName}}",
+            "allowedValues": [
+                "{{EventhubInstanceName}}"
+            ],
+            "metadata": {
+                "description": "The name of the EventHub Instance."
+            }
+        },
+        "EventhubSharedAccessPolicyName": {
+            "type": "string",
+            "defaultValue": "{{EventhubSharedAccessPolicyName}}",
+            "allowedValues": [
+                "{{EventhubSharedAccessPolicyName}}"
+            ],
+            "metadata": {
+                "description": "The name of the EventHub Namespace Shared Access Policy."
+            }
+        },
+        "FunctionAppServicePlanType": {
+            "type": "string",
+            "defaultValue": "{{FunctionAppServicePlanType}}",
+            "allowedValues": [
+                "{{FunctionAppServicePlanType}}"
+            ],
+            "metadata": {
+                "description": "The type of the Function App Service Plan. Choose Premium if you need vNet Support."
+            }
+        }
+    },
+    "variables": {
+        "uniqueResourceGroupName": "[concat('Coralogix-DiagnosticMetrics-Integration-', uniqueString('{{IntegrationId}}'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2022-09-01",
+            "name": "[variables('uniqueResourceGroupName')]",
+            "location": "[deployment().location]",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "cgxDiagnosticMetricsIntegration",
+            "resourceGroup" : "[variables('uniqueResourceGroupName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('uniqueResourceGroupName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.EventGrid/eventSubscriptions",
+                            "apiVersion": "2022-06-15",
+                            "name": "integrationStatusReporter",
+                            "properties": {
+                                "destination": {
+                                    "endpointType": "WebHook",
+                                    "properties": {
+                                        "endpointUrl": "[concat('https://ingress.', '{{CoralogixDomain}}', '/integrations/azure-cloud-events/v1/events')]",
+                                        "deliveryAttributeMappings": [
+                                            {
+                                                "name": "Authorization",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "[concat('Bearer ', parameters('CoralogixPrivateKey'))]",
+                                                    "isSecret": true
+                                                }
+                                            },
+                                            {
+                                                "name": "IntegrationId",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "{{IntegrationId}}",
+                                                    "isSecret": false
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "filter": {
+                                    "subjectBeginsWith": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', variables('uniqueResourceGroupName'), '/providers/Microsoft.Resources/deployments/cgxDiagnosticMetricsIntegration')]",
+                                    "includedEventTypes": [
+                                        "Microsoft.Resources.ResourceWriteSuccess",
+                                        "Microsoft.Resources.ResourceWriteFailure"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "type": "Microsoft.EventGrid/eventSubscriptions",
+                            "apiVersion": "2022-06-15",
+                            "name": "resourceGroupDeleteReporter",
+                            "dependsOn":[
+                                "Microsoft.EventGrid/eventSubscriptions/integrationStatusReporter"
+                            ],
+                            "properties": {
+                                "destination": {
+                                    "endpointType": "WebHook",
+                                    "properties": {
+                                        "endpointUrl": "[concat('https://ingress.', '{{CoralogixDomain}}', '/integrations/azure-cloud-events/v1/events')]",
+                                        "deliveryAttributeMappings": [
+                                            {
+                                                "name": "Authorization",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "[concat('Bearer ', parameters('CoralogixPrivateKey'))]",
+                                                    "isSecret": true
+                                                }
+                                            },
+                                            {
+                                                "name": "IntegrationId",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "{{IntegrationId}}",
+                                                    "isSecret": false
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "filter": {
+                                    "includedEventTypes": [
+                                        "Microsoft.EventGrid.SubscriptionDeletedEvent"
+                                    ],
+                                    "advancedFilters": [
+                                        {
+                                            "key": "subject",
+                                            "operatorType": "StringBeginsWith",
+                                            "value": "[concat('/subscriptions/', subscription().subscriptionId)]"
+                                        },
+                                        {
+                                            "key":"topic",
+                                            "operatorType": "StringBeginsWith",
+                                            "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', variables('uniqueResourceGroupName'))]"
+                                        }
+                                    ]
+                                }, 
+                                "scope": "[concat('/subscriptions/', subscription().subscriptionId)]"
+                            }
+                        },
+                        {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2021-04-01",
+                            "name": "linkedTemplate",
+                            "dependsOn": [
+                                "Microsoft.EventGrid/eventSubscriptions/integrationStatusReporter"
+                            ],
+                            "properties": {
+                                "mode": "Incremental",
+                                "templateLink": {
+                                    "uri": "https://raw.githubusercontent.com/coralogix/coralogix-azure-serverless/master/DiagnosticData/ARM/DiagnosticData.json",
+                                    "contentVersion": "1.0.0.0"
+                                },
+                                "parameters": {
+                                    "CoralogixRegion": {
+                                        "value": "Custom"
+                                    },
+                                    "CustomURL": {
+                                        "value": "{{CustomURL}}"
+                                    },
+                                    "CoralogixPrivateKey": {
+                                        "value": "[parameters('CoralogixPrivateKey')]"
+                                    },
+                                    "CoralogixApplication": {
+                                        "value": "[parameters('CoralogixApplication')]"
+                                    },
+                                    "CoralogixSubsystem": {
+                                        "value": "[parameters('CoralogixSubsystem')]"
+                                    },
+                                    "EventhubResourceGroup": {
+                                        "value": "[parameters('EventhubResourceGroup')]"
+                                    },
+                                    "EventhubNamespace": {
+                                        "value": "[parameters('EventhubNamespace')]"
+                                    },
+                                    "EventhubInstanceName": {
+                                        "value": "[parameters('EventhubInstanceName')]"
+                                    },
+                                    "EventhubSharedAccessPolicyName": {
+                                        "value": "[parameters('EventhubSharedAccessPolicyName')]"
+                                    },
+                                    "FunctionAppServicePlanType": {
+                                        "value": "[parameters('FunctionAppServicePlanType')]"
+                                    }
+                                }
+                            }
+                        }
+
+                    ]
+                }
+            }
+        }
+    ]
+}

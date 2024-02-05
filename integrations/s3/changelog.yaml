@@ -1,0 +1,10 @@
+changes:
+  - version: 2.0.0
+    description_md: |
+      # Changes:
+      - This integration now deploys AWS Logs Lambda Shipper v0.0.10. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details.
+      - **Major Change:** We are migrating from Node.js to Rust, since AWS is retiring support for Node.js in June 2024. Read [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html) for more details.
+  - version: 2.0.1
+    description_md: |
+      # Changes
+      - Update AWS Logs Lambda shipper to v0.0.13. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details.

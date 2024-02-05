@@ -1,0 +1,17 @@
+definition:
+  short_name: Cloudflare
+  name: Cloudflare
+  description: Cloudflare customers can review audit logs for a user account, filter by who made the change, which zone (domain) was the change was made on, and the timeframe of the change. You can use Cloudflare UI for it but also you are allowed to pull those logs to Coralogix. Once you get the logs you can gain insights and visualize what changes were done recently and you can set alerts on specific ones.
+  icon_details:
+    light: "/assets/integrations/cloudflare.svg"
+  tags:
+    - PULL
+    - Cloudflare
+  details:
+    - name: Cloudflare
+      url: https://coralogix.com/docs/cloudflare-audit-logs/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

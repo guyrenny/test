@@ -1,0 +1,18 @@
+definition:
+  short_name: awssns
+  name: AWS SNS
+  description: Coralogix can subscribe to AWS SNS. Consolidating SNS logs with your other logs provide for infrastructure and application logs analysis in context of SNS-represented events. This improves your root-cause and impact analysis capabilities. Using Coralogix visualizations you can use these messages to gain insights into trends and to unlock additional value embedded in them. Adding alerts to the mix enhances your proactive management capabilities.
+  icon_details:
+    light: "assets/integrations/aws-sns.svg"
+  tags:
+    - Push
+    - AWS
+    - SNS
+  details:
+    - name: AWS SNS
+      url: https://coralogix.com/docs/aws-sns-data-ingestion/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

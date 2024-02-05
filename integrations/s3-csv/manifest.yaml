@@ -1,0 +1,24 @@
+definition:
+  short_name: s3-csv
+  name: AWS S3 CSV
+  description: "<b>Amazon Simple Storage Service (Amazon S3)</b> is an object storage service that offers industry-leading scalability, data availability, security, and performance. You can record the actions that are taken by users, roles, or AWS services on Amazon S3 resources and maintain log records for auditing and compliance purposes."
+  icon_details:
+    light: "/assets/integrations/s3.svg"
+  tags:
+    - AWS
+    - Logs
+    - S3
+    - CSV
+  details:
+    - name: AWS Logs via Lambda Shipper
+      url: https://coralogix.com/docs/aws-integration-guide/
+  changelog:
+    type: Local
+    path: changelog.yaml
+revisions:
+  - revision: 0.0.1
+    template:
+      type: CloudFormation
+      cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+    field_definitions: v0.0.1/fields.yaml
+    group_definitions: v0.0.1/groups.yaml

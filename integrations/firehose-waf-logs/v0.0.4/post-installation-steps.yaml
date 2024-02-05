@@ -1,0 +1,21 @@
+default: |
+  <p>To start sending logs about traffic from your Web ACLs, you need to follow the steps below:</p>
+  <p>
+    <strong>STEP 1</strong>
+    . Navigate to WAF & Shield page
+  </p>
+  <p>
+    <strong>STEP 2</strong>
+    . In the left sidebar, select AWS WAF -> Web ACLs.
+  </p>
+  <p>
+    <strong>STEP 3</strong>
+    . Navigate to a specific Web ACL that you'd like to stream the traffic logs from.
+  </p>
+  <p>
+    <strong>STEP 4</strong>
+    . Select Logging and metrics tab and configure Logging destination to Kinesis Data Firehose stream called <strong>{{ integrationName }}-logs</strong>.
+  </p>
+  <p>That’s it, logs about traffic from your Web ACLs will also be directed to firehose.</p>
+  <br />
+  <a target='_blank' href='https://console.aws.amazon.com/wafv2/homev2/web-acls?region={{ region }}'>GO TO AWS Web ACLs</a></a>

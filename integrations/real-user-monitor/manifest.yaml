@@ -1,0 +1,20 @@
+definition:
+  short_name: real-user-monitor
+  name: Real User Monitoring
+  description: Coralogix's Real User Monitoring (RUM) is an advanced monitoring solution that provides unparalleled visibility into your application's frontend performance, all from the perspective of real users in real time. With RUM, you can gain a comprehensive understanding of how your application performs across a variety of browsers, devices, and networks, allowing you to quickly detect issues that might be affecting your users' experience.
+  icon_details:
+    light: "/assets/integrations/rum.svg"
+    dark: "/assets/integrations/rum-dark.svg"
+  tags:
+    - REAL USER MONITORING
+    - RUM
+  details:
+    - name: Real User Monitoring
+      url: https://coralogix.com/docs/real-user-monitoring/
+revisions:
+  - revision: 0.0.2
+    field_definitions: v0.0.2/fields.yaml
+    template:
+      type: Rum
+      browser_sdk_commands: v0.0.2/browser-sdk-commands.yaml
+      source_map_commands: v0.0.2/source-map-commands.yaml

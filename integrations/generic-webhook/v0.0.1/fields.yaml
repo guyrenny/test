@@ -1,0 +1,111 @@
+---
+fields:
+  - name: ContentType
+    visible: true
+    required: true
+    predefined: false
+    type: select
+    default_value:
+    display_name: Content Type
+    tooltip_text:
+    placeholder:
+    options:
+      - text
+      - json
+
+  - name: Enabled
+    visible: true
+    required: true
+    predefined: false
+    type: boolean
+    default_value: true
+    display_name: Enabled
+    tooltip_text:
+    placeholder:
+
+  - name: TimestampJsonSource
+    visible: true
+    required: false
+    predefined: false
+    type: select
+    default_value: true
+    display_name: Timestamp Source
+    tooltip_text:
+    placeholder:
+    options:
+      - generate
+      - json_path
+  - name: TimestampJsonPath
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value: true
+    display_name: Timestamp JSON Path
+    tooltip_text:
+    placeholder:
+
+  - name: TimestampTextSource
+    visible: true
+    required: false
+    predefined: false
+    type: select
+    default_value: true
+    display_name: Timestamp Source
+    tooltip_text:
+    placeholder:
+    options:
+      - generate
+      - regex
+  - name: TimestampRegex
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value: true
+    display_name: Timestamp Regex
+    tooltip_text:
+    placeholder:
+
+  - name: TimestampFormatType
+    visible: true
+    required: false
+    predefined: false
+    type: select
+    default_value: true
+    display_name: Timestamp Format Type
+    tooltip_text:
+    placeholder:
+    options:
+      - detect
+      - custom
+  - name: TimestampFormatPattern
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value: true
+    display_name: Timestamp Format Pattern
+    tooltip_text:
+    placeholder:
+
+  - name: WebhookId
+    readonly: true
+    visible: false
+    required: false
+    predefined: false
+    type: text
+    default_value: true
+    display_name: Webhook ID
+    tooltip_text:
+    placeholder:
+  - name: WebhookUrl
+    readonly: true
+    visible: false
+    required: false
+    predefined: false
+    type: text
+    default_value: true
+    display_name: Webhook URL
+    tooltip_text:
+    placeholder:

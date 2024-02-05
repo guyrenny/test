@@ -1,0 +1,17 @@
+definition:
+  short_name: gitlab
+  name: GitLab
+  description: Use Coralogix alerts and visualizations to gain insights into the status of repositories, branches, and activities such as commits and pulls, as well as to monitor any modifications to your GitLab repo. Consolidating all logs into Coralogix allows you to view application and infrastructure logs in the context of GitLab when doing root-cause or impact analysis.
+  icon_details:
+    light: "assets/integrations/gitlab.svg"
+  tags:
+    - Push
+    - GitLab
+  details:
+    - name: GitLab
+      url: https://coralogix.com/docs/gitlab-data-ingestion/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

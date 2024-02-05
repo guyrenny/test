@@ -1,0 +1,16 @@
+definition:
+  short_name: generic-webhook
+  name: Generic Webhook
+  description: "Easily send data from anywhere to Coralogix using Webhooks."
+  icon_details:
+    light: "/assets/integrations/generic-webhook.svg"
+  tags:
+    - Push
+  details:
+    - name: Generic Webhook
+      url: https://coralogix.com/docs/generic-incoming-webhooks
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

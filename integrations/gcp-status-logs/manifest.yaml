@@ -1,0 +1,17 @@
+definition:
+  short_name: GCP-Status-Logs
+  name: GCP Status Logs
+  description: Send your GCP logs to Coralogix to improve your root-cause and impact analysis capabilities surrounding your GCP-represented events. Monitor the health and performance of your GCP-based notification system in real-time using Coralogix log analytic capabilities, alerts, and top-notch visualization features.
+  icon_details:
+    light: "/assets/integrations/gcp.svg"
+  tags:
+    - PULL
+    - GCP
+  details:
+    - name: GCP Status Logs
+      url: https://coralogix.com/docs/gcp-status-logs/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

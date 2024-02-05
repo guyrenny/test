@@ -1,0 +1,29 @@
+---
+commands:
+  - name: InstallRumCli
+    language: bash
+    command: npm install -g @coralogix/rum-cli
+    tooltip_text: "In order to observe the full naming convention of your code, start by running the following command to install the tooling for uploading the source map."
+    description: "Install "
+    links:
+      - key: packageName
+        text: Coralogix Real User Monitoring CLI
+        url: https://www.npmjs.com/package/@coralogix/rum-cli?activeTab=readme
+      - key: learnMore
+        text: LEARN MORE
+        url: https://coralogix.com/docs/rum-integration-package/#source-maps
+  - name: UploadSourceMap
+    language: bash
+    command: |
+      coralogix-rum-cli upload-source-maps -k "{{apiKey}}" \
+                        -a "{{applicationName}}" \
+                        -e "{{coralogixDomain}}" \
+                        -v "<insert the code version here - must match the browser SDK version>" \
+                        -f "<folder location, e.g. ./dist/test>"
+    description: "Run the upload source map command"
+    tooltip_text: "In order to observe the source code on our platform with the full real name you gave your code (before uglifying it in the browser), you need to run the following NPM command."
+    links:
+      - key: learnMore
+        text: LEARN MORE
+        url: https://coralogix.com/docs/rum-integration-package/#source-maps
+

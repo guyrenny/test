@@ -1,0 +1,34 @@
+definition:
+  short_name: firehose-fargate-logs
+  name: "AWS EKS Fargate Logs via Firehose"
+  description: "<a target='_blank' href='https://aws.amazon.com/kinesis/data-firehose/'>Amazon Kinesis Data Firehose</a> delivers real-time streaming data to destinations like Amazon Simple Storage Service (Amazon S3), Amazon Redshift, or Amazon OpenSearch Service (successor to Amazon Elasticsearch Service), and now supports delivering streaming data to Coralogix."
+  icon_details:
+    light: "/assets/integrations/aws.svg"
+    dark: "/assets/integrations/aws-dark.svg"
+  tags:
+    - AWS
+    - Firehose
+    - Logs
+    - EKS
+    - Fargate
+  details:
+    - name: "AWS EKS Fargate Logs via Firehose"
+      url: https://coralogix.com/docs/firehose-fargate-logs
+  changelog:
+    type: Local
+    path: changelog.yaml
+revisions:
+  - revision: 0.0.1
+    template:
+      type: CloudFormation
+      cloudformation: v0.0.1/template.yaml
+      post_installation_steps: v0.0.1/post-installation-steps.yaml
+    field_definitions: v0.0.1/fields.yaml
+    group_definitions: v0.0.1/groups.yaml
+  - revision: 0.0.4
+    template:
+      type: CloudFormation
+      cloudformation: v0.0.4/template.yaml
+      post_installation_steps: v0.0.4/post-installation-steps.yaml
+    field_definitions: v0.0.4/fields.yaml
+    group_definitions: v0.0.4/groups.yaml

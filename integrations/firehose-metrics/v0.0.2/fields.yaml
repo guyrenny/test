@@ -1,0 +1,252 @@
+---
+fields:
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder: Your API key
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: cx-cw-metrics-firehose
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Firehose
+    display_name: Subsystem Name
+    tooltip_text: The name of the Subsystem that the integration will be used with.
+    placeholder: Subsystem name
+  - name: EnableMetricsStream
+    visible: false
+    required: true
+    predefined: true
+    type: boolean
+    default_value: true
+    display_name: Activate Metrics Streaming
+    tooltip_text: Activate real-time metrics streaming to Coralogix.
+    placeholder:
+    readonly: true
+  - name: IncludeNamespaces
+    visible: true
+    required: false
+    predefined: false
+    type: list_text
+    default_value:
+    display_name: Select CloudWatch Metric Namespaces
+    tooltip_text: Specify the Metric Namespaces of the metrics that you want to pull into Coralogix or leave empty to pull all the metrics.
+    placeholder: Select Metric Namespace
+    options:
+      - AWS/ACMPrivateCA
+      - AWS/AmazonMQ
+      - AWS/AmplifyHosting
+      - AWS/ApiGateway
+      - AWS/AppFlow
+      - AWS/AppRunner
+      - AWS/AppStream
+      - AWS/AppSync
+      - AWS/ApplicationELB
+      - AWS/Athena
+      - AWS/AutoScaling
+      - AWS/Backup
+      - AWS/Billing
+      - AWS/Braket
+      - AWS/Cassandra
+      - AWS/CertificateManager
+      - AWS/Chatbot
+      - AWS/ChimeSDK
+      - AWS/ChimeVoiceConnector
+      - AWS/ClientVPN
+      - AWS/CloudFront
+      - AWS/CloudHSM
+      - AWS/CloudSearch
+      - AWS/CloudTrail
+      - AWS/CloudWatch
+      - AWS/CodeBuild
+      - AWS/CodeWhisperer
+      - AWS/Cognito
+      - AWS/Comprehend
+      - AWS/Connect
+      - AWS/DAX
+      - AWS/DDoSProtection
+      - AWS/DMS
+      - AWS/DX
+      - AWS/DataLifecycleManager
+      - AWS/DataSync
+      - AWS/DevOps
+      - AWS/DirectoryService
+      - AWS/DocDB
+      - AWS/DynamoDB
+      - AWS/EBS
+      - AWS/EC2
+      - AWS/EC2Spot
+      - AWS/ECR
+      - AWS/ECS
+      - AWS/EFS
+      - AWS/ELB
+      - AWS/ES
+      - AWS/ElastiCache
+      - AWS/ElasticBeanstalk
+      - AWS/ElasticGPUs
+      - AWS/ElasticInference
+      - AWS/ElasticMapReduce
+      - AWS/ElasticTranscoder
+      - AWS/Events
+      - AWS/FSx
+      - AWS/Firehose
+      - AWS/GameLift
+      - AWS/GatewayELB
+      - AWS/GlobalAccelerator
+      - AWS/GroundStation
+      - AWS/HealthLake
+      - AWS/IPAM
+      - AWS/IVS
+      - AWS/IVSChat
+      - AWS/Inspector
+      - AWS/IoT
+      - AWS/IoTAnalytics
+      - AWS/IoTFleetWise
+      - AWS/IoTSiteWise
+      - AWS/IoTTwinMaker
+      - AWS/KMS
+      - AWS/Kafka
+      - AWS/Kinesis
+      - AWS/KinesisAnalytics
+      - AWS/KinesisVideo
+      - AWS/Lambda
+      - AWS/Lex
+      - AWS/LicenseManager
+      - AWS/Location
+      - AWS/Logs
+      - AWS/LookoutMetrics
+      - AWS/LookoutVision
+      - AWS/MGN
+      - AWS/ML
+      - AWS/MediaConnect
+      - AWS/MediaConvert
+      - AWS/MediaLive
+      - AWS/MediaPackage
+      - AWS/MediaStore
+      - AWS/MediaTailor
+      - AWS/MemoryDB
+      - AWS/NATGateway
+      - AWS/Neptune
+      - AWS/NetworkELB
+      - AWS/NetworkFirewall
+      - AWS/NetworkManager
+      - AWS/NimbleStudio
+      - AWS/Omics
+      - AWS/OpsWorks
+      - AWS/Outposts
+      - AWS/PanoramaDeviceMetrics
+      - AWS/Personalize
+      - AWS/Pinpoint
+      - AWS/Polly
+      - AWS/Private5G
+      - AWS/PrivateLinkEndpoints
+      - AWS/PrivateLinkServices
+      - AWS/Prometheus
+      - AWS/QLDB
+      - AWS/QuickSight
+      - AWS/RDS
+      - AWS/RUM
+      - AWS/Redshift
+      - AWS/Rekognition
+      - AWS/Robomaker
+      - AWS/Route53
+      - AWS/Route53RecoveryReadiness
+      - AWS/S3
+      - AWS/SES
+      - AWS/SNS
+      - AWS/SQS
+      - AWS/SSM
+      - AWS/SWF
+      - AWS/SageMaker
+      - AWS/SecretsManager
+      - AWS/SecurityLake
+      - AWS/ServiceCatalog
+      - AWS/States
+      - AWS/StorageGateway
+      - AWS/Textract
+      - AWS/ThingsGraph
+      - AWS/Timestream
+      - AWS/Transcribe
+      - AWS/Transfer
+      - AWS/TransitGateway
+      - AWS/Translate
+      - AWS/TrustedAdvisor
+      - AWS/VPN
+      - AWS/WAFV2
+      - AWS/WorkMail
+      - AWS/WorkSpaces
+      - AWS/WorkSpacesWeb
+      - AWS/lookoutequipment
+      - AWS/managedblockchain
+      - AWS/simspaceweaver
+      - AWSLicenseManager/licenseUsage
+      - ECS/ContainerInsights
+  - name: EnableAddtionalStatistics
+    visible: true
+    required: true
+    predefined: true
+    type: boolean
+    default_value: true
+    display_name: Enable Additional Statistics
+    tooltip_text: Enabling this configuration is advisable as it offers detailed percentile data on key AWS metrics.
+    placeholder:
+  - name: IncludeNamespacesMetricNames
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: json
+    default_value:
+    display_name: Select CloudWatch Metric Namespaces
+    tooltip_text: Enter a JSON-formatted string containing a list of namespaces and metric names to include in the metric stream or leave empty to pull all the metrics.
+    placeholder: e.g. {"AWS/EC2":["CPUUtilization","NetworkOut"],"AWS/S3":["BucketSizeBytes"]}
+  - name: AddtionalStatisticsConfigurations
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: true
+    type: json
+    default_value: '[{"AdditionalStatistics":["p50","p75","p95","p99"],"IncludeMetrics":[{"Namespace":"AWS/EBS","MetricName":"VolumeTotalReadTime"},{"Namespace":"AWS/EBS","MetricName":"VolumeTotalWriteTime"},{"Namespace":"AWS/ELB","MetricName":"Latency"},{"Namespace":"AWS/ELB","MetricName":"Duration"},{"Namespace":"AWS/Lambda","MetricName":"PostRuntimeExtensionsDuration"},{"Namespace":"AWS/S3","MetricName":"FirstByteLatency"},{"Namespace":"AWS/S3","MetricName":"TotalRequestLatency"}]}]'
+    display_name: Additional Statistics Configurations
+    tooltip_text: Enter a JSON-formatted string containing additional statistics to include to the metric stream following Cloudformation's MetricStreamStatisticsConfiguration Structure.
+    placeholder:
+  - name: OutputFormat
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: opentelemetry0.7
+    display_name: Output Format
+    tooltip_text: The output format of the CloudWatch metric stream.
+    placeholder:
+    options:
+      - json
+      - opentelemetry0.7
+
+
+

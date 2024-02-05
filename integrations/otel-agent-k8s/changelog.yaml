@@ -1,0 +1,23 @@
+changes:
+  - version: 0.0.44
+    description_md: |
+       ### Feature:
+       * Remove memoryballast and enable `GOMEMLIMIT` instead. This should significantly reduce memory footprint. See [open-telemetry](open-telemetry/opentelemetry-helm-charts#891) ([#336](https://github.com/coralogix/telemetry-shippers/pull/336)) 
+       ### Chore:
+        * Update collector to `v0.91.0`. ([346](https://github.com/coralogix/telemetry-shippers/pull/346))
+
+  - version: 0.0.38
+    description_md: |
+       ### Fix:
+       * Fix k8s.deployment.name transformation, in case the attribute already exists. ([#335](https://github.com/coralogix/telemetry-shippers/pull/335))
+       * Kubelet Stats use Node IP instead of Node name. ([#335](https://github.com/coralogix/telemetry-shippers/pull/335))
+       
+       ### Feature:
+       * [FEATURE] Add support for span metrics preset. This replaces the deprecated `spanmetricsprocessor`
+        with `spanmetricsconnector`. The new connector is disabled by default, as opposed the replaces processor.
+        To enable it, set `presets.spanMetrics.enabled` to `true`. ([#334](https://github.com/coralogix/telemetry-shippers/pull/334)) 
+
+  - version: 0.0.36
+    description_md: | 
+       ## Fix: 
+       * Change statsd receiver port to 8125 instead of 8127

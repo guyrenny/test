@@ -1,0 +1,144 @@
+---
+fields:
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder: Your API key
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: CloudTrail-SNS
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: CloudTrail-SNS
+    display_name: Subsystem Name
+    tooltip_text: The name of the Subsystem that the integration will be used with.
+    placeholder: Subsystem name
+  - name: S3BucketName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: S3 Bucket Name
+    tooltip_text: The name of the S3 bucket with CloudTrail logs to collect.
+    placeholder: S3 Bucket Name
+  - name: SNSTopicArn
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: ARN of the SNS topic
+    tooltip_text: ARN of the SNS topic where S3 bucket events are published.
+    placeholder: ARN of the SNS topic
+    allowed_pattern: '^arn:aws:sns:[a-z0-9-]+:[0-9]{12}:[a-zA-Z0-9-_]+$'
+  - name: S3KeyPrefix
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: 'AWSLogs/'
+    display_name: S3 Path Prefix
+    tooltip_text: Specify the prefix of the log path within your bucket. This allows you to select and ship only the specified portion of your bucket's logs.
+    placeholder:
+  - name: S3KeySuffix
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: '.json.gz'
+    display_name: S3 Path Suffix
+    tooltip_text: A filter for the suffix of the file path in your bucket.
+    placeholder:
+  - name: FunctionArchitecture
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: x86_64
+    display_name: Lambda Function Architecture
+    tooltip_text: The architecture of the lambda function to be deployed.
+    placeholder:
+    options:
+      - x86_64
+      - arm64
+  - name: FunctionMemorySize
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 1024
+    display_name: Lambda Function Memory Size
+    tooltip_text: The memory limit for the Lambda function should be set within the range of 128 (minimum) to 3008 (maximum) MB. Please avoid altering this setting from the default value.
+    placeholder:
+  - name: FunctionTimeout
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 300
+    display_name: Lambda Function Timeout
+    tooltip_text: The Lambda function timeout limit should be configured within the allowable range of 30 seconds (minimum) to 900 seconds (maximum). Please avoid altering this setting from the default value.
+    placeholder:
+  - name: NotificationEmail
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Notification Email
+    tooltip_text: If the lambda function encounters an error, a notification email will be sent to this address using AWS SNS (Simple Notification Service), assuming you have a functioning SNS set up with a validated domain.
+    placeholder:
+  - name: SsmEnabled
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: boolean
+    default_value: false
+    display_name: Enable AWS Secrets Manager
+    tooltip_text: Store your Coralogix API Key as a secret in AWS Secrets Manager.
+    placeholder:
+  - name: LayerARN
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Lambda Layer ARN
+    tooltip_text: If you are using SSM, this is the ARN of the Coralogix Security Layer. Please copy the ARN from the serverless application installed in your AWS account under 'SSM'.
+    placeholder:
+
+
+

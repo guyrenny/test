@@ -1,0 +1,79 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AzureQueueStorage
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: PrivateKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder_text: API key
+  - name: CoralogixApplication
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Azure
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: CoralogixSubsystem
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: QueueStorage
+    display_name: Subsystem Name
+    tooltip_text: The subsystem name you wish to allocate to this log shipper (a good
+      starting point may be your AWS account ID).
+    placeholder: Subsystem name
+  - name: StorageAccountName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: ""
+    display_name: Storage Account Name
+    tooltip_text: The name of the storage account containing the Blob container. Must be of type StorageV2 (general purpose v2).
+    placeholder: Name of the storage account.
+  - name: StorageAccountResourceGroup
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: ""
+    display_name: Resource Group
+    tooltip_text: The resource group name of the storage account containing the Blob.
+    placeholder: Storage Account Resource Group
+  - name: StorageQueueName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: ""
+    display_name: Storage Queue Name
+    tooltip_text: The name of the storage queue.
+    placeholder: Storage Queue Name
+  - name: FunctionAppServicePlanType
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: "Consumption"
+    display_name: Function App Service Plan Type
+    tooltip_text: Specifies the billing and scaling options for Azure Function App. "Consumption" is pay-per-execution and auto-scales, ideal for variable traffic. "Premium" offers enhanced performance and VNET support, with pre-allocated resources suitable for consistent, demanding workloads.
+    placeholder: Function App Service Plan Type
+    options:
+      - "Consumption"
+      - "Premium"

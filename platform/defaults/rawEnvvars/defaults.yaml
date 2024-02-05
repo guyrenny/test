@@ -1,0 +1,5 @@
+environmentVariableList:
+  RUST_LOG: info
+  APP__DEFINITION_SYNC__S3__BUCKET: cgx-integrations-service-{CX_ENV_ID}
+  APP__DEFINITION_SYNC__S3__REGION: {CX_REGION}
+

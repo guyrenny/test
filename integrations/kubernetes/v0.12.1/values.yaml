@@ -1,0 +1,13 @@
+---
+global:
+  domain: ${CORALOGIX_DOMAIN}
+
+opentelemetry-collector-agent:
+  extraEnvs:
+    - name: CORALOGIX_PRIVATE_KEY
+      value: ${CORALOGIX_PRIVATE_KEY}
+
+opentelemetry-collector-events:
+  extraEnvs:
+    - name: CORALOGIX_PRIVATE_KEY
+      value: ${CORALOGIX_PRIVATE_KEY}

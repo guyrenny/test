@@ -1,0 +1,19 @@
+definition:
+  short_name: gcp-metrics-collector
+  name: GCP Metrics
+  description: "Google Cloud Platform provides built-in monitoring and observability tools that allow users to collect and analyze metrics and traces from their GCP resources. Send Google Cloud <a target='_blank' href='https://cloud.google.com/monitoring/api/metrics_gcp'>metrics</a> and <a target='_blank' href='https://cloud.google.com/trace/docs/overview'>traces</a> seamlessly to Coralogix. Search, analyze, and visualize your data, gaining insights into application behavior, identifying errors, and troubleshooting problems."
+  icon_details:
+    light: "/assets/integrations/gcp.svg"
+  tags:
+    - GCP
+  details:
+    - name: GCP Metrics
+      url: https://coralogix.com/docs/gcp-metrics
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService
+
+
+

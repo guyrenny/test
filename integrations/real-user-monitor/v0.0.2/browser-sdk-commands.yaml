@@ -1,0 +1,58 @@
+---
+commands:
+  - name: InstallBrowserSdk
+    language: bash
+    command: npm install @coralogix/browser
+    description: "Install "
+    tooltip_text: "In order to use the full functionality and capabilities of Real User Monitoring, start by running the following command to install the Browser SDK."
+    links:
+      - key: packageName
+        text: Browser SDK Package
+        url: https://www.npmjs.com/package/@coralogix/browser
+      - key: learnMore
+        text: LEARN MORE
+        url: https://coralogix.com/docs/rum-integration-package/#rum-browser-sdk
+  - name: InitializeBrowserSdk
+    language: javascript
+    command: |
+      import { CoralogixRum } from '@coralogix/browser';
+
+      CoralogixRum.init({
+        public_key: '{{apiKey}}',
+        application: '{{applicationName}}',
+        version: '<insert the code version here - must match the browser SDK version>',
+        coralogixDomain: '{{coralogixDomain}}'
+      });
+    description: "Initialize Browser SDK"
+    tooltip_text: "Embedding the following code snippet to the code base will enable you to collect data from your front-end application."
+    links:
+      - key: learnMore
+        text: LEARN MORE
+        url: https://coralogix.com/docs/rum-integration-package/#rum-browser-sdk
+  - name: SetUserContext
+    language: javascript
+    command: |
+      CoralogixRum.setUserContext({
+        user_id: '123',
+        user_name: 'name',
+        user_email: 'user@email.com',
+        user_metadata: {
+          role: 'admin',
+          // ...
+        }
+      })
+
+      CoralogixRum.setLabels({
+        paymentMethod: 'visa',
+        userTheme: 'black'
+        // ...
+      })
+
+      CoralogixRum.log(CoralogixLogSeverity.Error, 'this is a log', { key: 'value' })
+      CoralogixRum.error('this is a log with error severity', { key: 'value' })
+    description: "Set User Context and Labels"
+    tooltip_text: "In addition to the out of the box attributes we've created, we allow you to add your own user attributes and labels."
+    links:
+      - key: learnMore
+        text: LEARN MORE
+        url: https://coralogix.com/docs/rum-integration-package/#rum-browser-sdk

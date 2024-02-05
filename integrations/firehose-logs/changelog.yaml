@@ -1,0 +1,10 @@
+changes:
+  - version: 0.0.4
+    description_md: |
+      ### Updated: 
+       * Changed CustomDomain to be proper domain instead of url. Added CloudWatch_Metrics_OpenTelemetry070_WithAggregations option ([#57](https://github.com/coralogix/cloudformation-coralogix-aws/pull/57))
+       * Text change correction, test pr trigger script ([#60](https://github.com/coralogix/cloudformation-coralogix-aws/pull/60))
+       * Another text change correction ([#63](https://github.com/coralogix/cloudformation-coralogix-aws/pull/63))
+       * Split Firehose Logs and Metrics ([#82](https://github.com/coralogix/cloudformation-coralogix-aws/pull/82))
+       * DynamicFromFields changes and documentation ([#85](https://github.com/coralogix/cloudformation-coralogix-aws/pull/85))
+      

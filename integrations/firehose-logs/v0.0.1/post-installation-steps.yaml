@@ -1,0 +1,111 @@
+CloudWatch_JSON: |
+  <p>To start sending your logs to Coralogix you first need to create a subscription filter inside your Cloudwatch log group.</p>
+  <p>
+    <strong>STEP 1</strong>
+    . Navigate to the AWS Logs Groups Page.
+  </p>
+  <p>
+    <strong>STEP 2</strong>
+    . Create a new subscription filter for the relevant log group – [Your_log_group] -> Subscription filters -> Create Kinesis Firehose
+    subscription filter.
+    <br />
+    Under Choose destination:
+  </p>
+  <ul>
+    <li>
+      For Destination Account choose
+      <strong>Current Account</strong>
+      .
+    </li>
+    <li>
+      For Kinesis Firehose delivery stream choose the
+      <strong>{{ integrationName }}-logs</strong>
+      .
+    </li>
+  </ul>
+  <p>
+    <strong>STEP 3</strong>
+    . Scroll down to Grant permission: For Select an existing role choose
+    <strong>{{ integrationName }}-cloudwatchlogs</strong>
+    role.
+  </p>
+  <p>
+    <strong>STEP 4</strong>
+    . After that scroll down and click on Start streaming.
+  </p>
+  <p>That’s it, logs coming to your cloudwatch log group will also be directed to firehose.</p>
+  <br />
+  <a target='_blank' href='https://console.aws.amazon.com/cloudwatch/home?region={{ region }}#logsV2:log-groups/'>GO TO AWS LOG GROUPS</a>
+CloudWatch_CloudTrail: |
+  <p>To start sending your logs to Coralogix you first need to create a subscription filter inside your Cloudwatch log group.</p>
+  <p>
+    <strong>STEP 1</strong>
+    . Navigate to the AWS Logs Groups Page.
+  </p>
+  <p>
+    <strong>STEP 2</strong>
+    . Create a new subscription filter for the relevant log group – [Your_log_group] -> Subscription filters -> Create Kinesis Firehose
+    subscription filter.
+    <br />
+    Under Choose destination:
+  </p>
+  <ul>
+    <li>
+      For Destination Account choose
+      <strong>Current Account</strong>
+      .
+    </li>
+    <li>
+      For Kinesis Firehose delivery stream choose the
+      <strong>{{ integrationName }}-logs</strong>
+      .
+    </li>
+  </ul>
+  <p>
+    <strong>STEP 3</strong>
+    . Scroll down to Grant permission: For Select an existing role choose
+    <strong>{{ integrationName }}-cloudwatchlogs</strong>
+    role.
+  </p>
+  <p>
+    <strong>STEP 4</strong>
+    . After that scroll down and click on Start streaming.
+  </p>
+  <p>
+    <strong>STEP 5</strong>
+    . Navigate to the specific Trail instance that you'd like to stream from.
+  </p>
+  <p>
+    <strong>STEP 6</strong>
+    . Provide the specific CloudWatch Log Group to the CloudWatch Logs configuration section i.e. [Your_log_group] which was provided in the Step 1.
+  </p>
+  <p>That’s it, logs coming to your CloudTrail will also be directed to firehose.</p>
+  <br />
+  <a target='_blank' href='https://console.aws.amazon.com/cloudwatch/home?region={{ region }}#logsV2:log-groups/'>GO TO AWS LOG GROUPS</a>
+  <a target='_blank' href='https://us-east-1.console.aws.amazon.com/cloudtrail/home?region={{ region }}#/dashboard/'>GO TO AWS CLOUDTRAIL</a>
+WAF: |
+  <p>To start sending logs about traffic from your Web ACLs, you need to follow the steps below:</p>
+  <p>
+    <strong>STEP 1</strong>
+    . Navigate to WAF & Shield page
+  </p>
+  <p>
+    <strong>STEP 2</strong>
+    . In the left sidebar, select AWS WAF -> Web ACLs.
+  </p>
+  <p>
+    <strong>STEP 3</strong>
+    . Navigate to a specific Web ACL that you'd like to stream the traffic logs from.
+  </p>
+  <p>
+    <strong>STEP 4</strong>
+    . Select Logging and metrics tab and configure Logging destination to Kinesis Data Firehose stream called <strong>{{ integrationName }}-logs</strong>.
+  </p>
+  <p>That’s it, logs about traffic from your Web ACLs will also be directed to firehose.</p>
+  <br />
+  <a target='_blank' href='https://console.aws.amazon.com/wafv2/homev2/web-acls?region={{ region }}'>GO TO AWS Web ACLs</a></a>
+EksFargate: |
+  <p>To start sending your logs to Coralogix, it's necessary to configure log_router built into Fargate Kubelet to route your application logs to the Kinesis Data Firehose stream called <strong>{{ integrationName }}-logs</strong>.</p>
+# These can be anything - so maybe consider adding some Generic steps for setting up some sample in the future.
+RawText:
+Default:

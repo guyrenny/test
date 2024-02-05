@@ -1,0 +1,38 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Okta
+    display_name: Integration Name
+    tooltip_text: Used to identify the integration.
+    placeholder: Add an Integration Name
+  - name: AccountName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Account Name
+    tooltip_text: Account name will appear as a subsystem in your logs.
+    placeholder: Account name will appear as a subsystem in your logs
+  - name: OktaHost
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Okta domain
+    tooltip_text: The domain of your Okta Application.
+    placeholder: The domain of your Okta Application.
+  - name: OktaApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Okta API Key
+    tooltip_text: Used to connect to and retrieve logs from Okta.
+    placeholder: Paste your API key

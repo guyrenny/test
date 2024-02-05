@@ -1,0 +1,20 @@
+definition:
+  short_name: aws-resource-metadata
+  name: AWS Resource Metadata
+  description: "Collects metadata of EC2 instances and AWS Lambda functions in the region of your AWS account and sends them to Coralogix."
+  icon_details:
+    light: "/assets/integrations/aws-resource-metadata.svg"
+  tags:
+    - AWS
+    - Lambda
+    - EC2
+  details:
+    - name: AWS Resource Metadata
+      url: https://coralogix.com/docs/aws-resource-metadata-collection/
+revisions:
+  - revision: 1.2.3
+    template:
+      type: CloudFormation
+      cloudformation: v1.2.3/template.yaml
+    field_definitions: v1.2.3/fields.yaml
+    group_definitions: v1.2.3/groups.yaml

@@ -1,0 +1,17 @@
+definition:
+  short_name: opsgenie
+  name: Opsgenie
+  description: Alerts are the main entities for your incident management flow within Opsgenie. Coralogix allows you to monitor Opsgenie alerts and add their context to other application and infrastructure events. Using Coralogix visualizations, tags, and other log analysis tools you can perform better root-cause and impact analysis and gain additional insights into your infrastructure health and the effectiveness of your operational processes.
+  icon_details:
+    light: "assets/integrations/opsgenie.svg"
+  tags:
+    - Push
+    - Opsgenie
+  details:
+    - name: Opsgenie
+      url: https://coralogix.com/docs/opsgenie-data-ingestion/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

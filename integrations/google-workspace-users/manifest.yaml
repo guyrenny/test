@@ -1,0 +1,17 @@
+definition:
+  short_name: google-workspace-users
+  name: Google Workspace Users
+  description: Collect all user details from Google Workspace Admin Console along with their metadata. Normalize user identifiers from relevant product logs, as cx_security.user key. Enrich user data with additional context, on demand.
+  icon_details:
+    light: "/assets/integrations/google-workspace-light.svg"
+    dark: "/assets/integrations/google-workspace-dark.svg"
+  tags:
+    - Google Workspace
+  details:
+    - name: Google Workspace
+      url: https://coralogix.com/docs/google-workspace
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

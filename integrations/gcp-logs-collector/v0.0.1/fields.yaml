@@ -1,0 +1,46 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+  - name: SubscriptionName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Subscription Name
+    tooltip_text: The name of the GCP Pub/Sub subscription to pull logs from.
+    placeholder: Subscription name
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Subsystem Name
+    tooltip_text: The name of the subsystem that the integration will be used with.
+    placeholder: Subsystem name
+  - name: ServiceAccountKey
+    visible: false
+    required: true
+    predefined: false
+    type: text
+    display_name: Service Account Key
+    tooltip_text:
+    placeholder:

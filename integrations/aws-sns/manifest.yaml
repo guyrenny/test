@@ -1,0 +1,23 @@
+definition:
+  short_name: aws-sns-shipper
+  name: AWS SNS
+  description: "<b>Amazon Simple Notification Service (Amazon SNS)</b> is a fully managed pub/sub messaging service that allows you to integrate and decouple distributed software systems and components. It provides industry-leading scalability, data availability, security, and performance. You can record the actions taken by users, roles, or AWS services on Amazon SNS resources and maintain log records for auditing and compliance purposes."
+  icon_details:
+    light: "/assets/integrations/sns.svg"
+  tags:
+    - AWS
+    - Logs
+    - SNS
+  details:
+    - name: AWS Logs via Lambda Shipper
+      url: https://coralogix.com/docs/aws-integration-guide/
+  changelog:
+    type: Local
+    path: changelog.yaml
+revisions:
+  - revision: 0.0.1
+    template:
+      type: CloudFormation
+      cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+    field_definitions: v0.0.1/fields.yaml
+    group_definitions: v0.0.1/groups.yaml

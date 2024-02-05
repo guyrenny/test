@@ -1,0 +1,38 @@
+default: |
+  <p>To start sending your logs to Coralogix you first need to create a subscription filter inside your Cloudwatch log group.</p>
+  <p>
+    <strong>STEP 1</strong>
+    . Navigate to the AWS Logs Groups Page.
+  </p>
+  <p>
+    <strong>STEP 2</strong>
+    . Create a new subscription filter for the relevant log group – [Your_log_group] -> Subscription filters -> Create Kinesis Firehose
+    subscription filter.
+    <br />
+    Under Choose destination:
+  </p>
+  <ul>
+    <li>
+      For Destination Account choose
+      <strong>Current Account</strong>
+      .
+    </li>
+    <li>
+      For Kinesis Firehose delivery stream choose the
+      <strong>{{ integrationName }}-logs</strong>
+      .
+    </li>
+  </ul>
+  <p>
+    <strong>STEP 3</strong>
+    . Scroll down to Grant permission: For Select an existing role choose
+    <strong>{{ integrationName }}-cloudwatchlogs</strong>
+    role.
+  </p>
+  <p>
+    <strong>STEP 4</strong>
+    . After that scroll down and click on Start streaming.
+  </p>
+  <p>That’s it, logs coming to your cloudwatch log group will also be directed to firehose.</p>
+  <br />
+  <a target='_blank' href='https://console.aws.amazon.com/cloudwatch/home?region={{ region }}#logsV2:log-groups/'>GO TO AWS LOG GROUPS</a>

@@ -1,0 +1,23 @@
+definition:
+  short_name: aws-kinesis
+  name: AWS Kinesis
+  description: "<b>Amazon Kinesis</b> is a fully managed service that allows you to ingest, process, and analyze real-time streaming data. It enables you to integrate and decouple distributed software systems and components. It offers industry-leading scalability, data availability, security, and performance. You can record the actions taken by users, roles, or AWS services on Amazon Kinesis resources and maintain log records for auditing and compliance purposes. Furthermore, you can subscribe Kinesis Data Firehose delivery streams to Amazon SNS topics, allowing you to send notifications to additional storage and analytics endpoints. Messages published to an Amazon SNS topic are sent to the subscribed Kinesis Data Firehose delivery stream, and delivered to the destination as configured in Kinesis Data Firehose. A subscription owner can subscribe up to five Kinesis Data Firehose delivery streams to an Amazon SNS topic "
+  icon_details:
+    light: "/assets/integrations/kinesis.svg"
+  tags:
+    - AWS
+    - Logs
+    - Kinesis
+  details:
+    - name: AWS Logs via Lambda Shipper
+      url: https://coralogix.com/docs/aws-integration-guide/
+  changelog:
+    type: Local
+    path: changelog.yaml
+revisions:
+  - revision: 0.0.1
+    template:
+      type: CloudFormation
+      cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+    field_definitions: v0.0.1/fields.yaml
+    group_definitions: v0.0.1/groups.yaml

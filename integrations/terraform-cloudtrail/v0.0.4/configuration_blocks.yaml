@@ -1,0 +1,31 @@
+---
+configuration_blocks:
+  - name:  CloudTrailCollectionLambda
+    description: "Install our <a target='_blank' href='https://coralogix.com/docs/aws-cloudtrail/?embedded=true'>CloudTrail Collection Lambda</a> by adding this declaration to your Terraform project:"
+    value:  |
+      module "coralogix-shipper-cloudtrail" {
+        source = "coralogix/aws/coralogix//modules/s3"
+        version = "1.0.61"
+        coralogix_region   = "Custom"
+        custom_url = "https://ingress.{{CustomDomain}}/api/v1/logs"
+        private_key        = {{ApiKey}}
+        application_name   = {{ApplicationName}}
+        subsystem_name     = {{SubsystemName}}
+        s3_bucket_name     = {{S3BucketName}}
+        integration_type   = "cloudtrail"
+        create_secret = {{CreateSecret}}
+        secret_manager_enabled = {{SecretsManagerEnabled}}
+        layer_arn = {{LayerARN}}
+        newline_pattern = {{NewlinePattern}}
+        blocking_pattern = {{BlockingPattern}}
+        buffer_size = {{BufferSize}}
+        sampling_rate = {{SamplingRate}}
+        debug = {{Debug}}
+        memory_size = {{FunctionMemorySize}}
+        timeout = {{FunctionTimeout}}
+        architecture = {{FunctionArchitecture}} 
+        s3_key_prefix = {{S3KeyPrefix}}
+        s3_key_suffix = {{S3KeySuffix}}
+        notification_email = {{NotificationEmail}}
+        custom_s3_bucket = {{CustomS3Bucket}}
+      }

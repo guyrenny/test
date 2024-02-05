@@ -1,0 +1,30 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Slack
+    display_name: Integration Name
+    tooltip_text:
+    placeholder: Add an Integration Name
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Your API Key
+    tooltip_text:
+    placeholder: Your API Key
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: slack
+    display_name: App Name
+    tooltip_text:
+    placeholder: App Name
+    allowed_pattern: ^[^\s]*$

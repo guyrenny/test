@@ -2,7 +2,7 @@
 #Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/vpc-flow-logs
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: AWS Lambda function for sending VPC Flow Logs from an existing S3 bucket to Coralogix.
+Description: AWS Lambda function for sending VPC Flow Logs from an existing S3 bucket to Coralogix
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: Coralogix-VPC-Flog-Logs-S3
@@ -16,7 +16,6 @@ Metadata:
       - logs
       - s3
       - vpc
-      - test 1234
     HomePageUrl: https://coralogix.com
     SemanticVersion: 1.0.7
     SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
@@ -397,7 +396,7 @@ Resources:
         - 'lambda/coralogix/${AWS::Region}/${function}'
         - function: !Ref LambdaFunctionSSM
       SecretString: !Ref ApiKey
-  # define a custom resource to create the trigger
+  # define a custom resource to create the trigger.
   CustomResourceLambdaTriggerFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -518,22 +517,22 @@ Resources:
       CoralogixApiKey: !Ref ApiKey
 
       # Parameters to track
-      IntegrationNameField: !Ref "AWS::StackName"
-      SubsystemField: !Ref SubsystemName
-      ApplicationNameField: !Ref ApplicationName
-      CoralogixRegionField: !Ref CoralogixRegion
-      CustomDomainField: !Ref CustomDomain
-      LayerARNField: !Ref LayerARN
-      SsmEnabledField: !Ref SsmEnabled
-      NewlinePatternField: !Ref NewlinePattern
-      BlockingPatternField: !Ref BlockingPattern
-      SamplingRateField: !Ref SamplingRate
-      BufferSizeField: !Ref BufferSize
-      DebugField: !Ref Debug
-      S3BucketNameField: !Ref S3BucketName
-      S3KeyPrefixField: !Ref S3KeyPrefix
-      S3KeySuffixField: !Ref S3KeySuffix
-      FunctionArchitectureField: !Ref FunctionArchitecture
-      FunctionMemorySizeField: !Ref FunctionMemorySize
-      FunctionTimeoutField: !Ref FunctionTimeout
-      NotificationEmailField: !Ref NotificationEmail
+      IntegrationName: !Ref "AWS::StackName"
+      SubsystemName: !Ref SubsystemName
+      ApplicationName: !Ref ApplicationName
+      CoralogixRegion: !Ref CoralogixRegion
+      CustomDomain: !Ref CustomDomain
+      LayerARN: !Ref LayerARN
+      SsmEnabled: !Ref SsmEnabled
+      NewlinePattern: !Ref NewlinePattern
+      BlockingPattern: !Ref BlockingPattern
+      SamplingRate: !Ref SamplingRate
+      BufferSize: !Ref BufferSize
+      Debug: !Ref Debug
+      S3BucketName: !Ref S3BucketName
+      S3KeyPrefix: !Ref S3KeyPrefix
+      S3KeySuffix: !Ref S3KeySuffix
+      FunctionArchitecture: !Ref FunctionArchitecture
+      FunctionMemorySize: !Ref FunctionMemorySize
+      FunctionTimeout: !Ref FunctionTimeout
+      NotificationEmail: !Ref NotificationEmail

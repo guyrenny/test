@@ -1,0 +1,21 @@
+definition:
+  short_name: Okta
+  name: Okta
+  description: Coralogix provides a way to easily forward your Okta logs straight to the Coralogix platform.
+  icon_details:
+    light: "/assets/integrations/okta.svg"
+    dark: "/assets/integrations/okta-dark.svg"
+  tags:
+    - PULL
+  details:
+    - name: Okta Contextual Logs
+      url: https://coralogix.com/docs/okta-contextual-logs/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService
+  - revision: 0.0.2
+    field_definitions: v0.0.2/fields.yaml
+    template:
+      type: ManagedService

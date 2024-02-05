@@ -1,0 +1,36 @@
+definition:
+  short_name: CloudTrail-SNS
+  name: AWS CloudTrail via SNS
+  description: "<b>AWS CloudTrail</b> monitors and records account activity across your AWS infrastructure, giving you control over storage, analysis, and remediation actions. Send your CloudTrail logs to Coralogix via <b>Amazon Simple Notification Service (Amazon SNS)</b> to enhance your data management, analysis, and monitoring capabilities."
+  icon_details:
+    light: "/assets/integrations/cloudtrail.svg"
+  tags:
+    - AWS
+    - CloudTrail
+    - Logs
+    - SNS
+  details:
+    - name: AWS Logs via Lambda Shipper
+      url: https://coralogix.com/docs/aws-integration-guide/
+  changelog:
+    type: Local
+    path: changelog.yaml
+revisions:
+  - revision: 0.0.1
+    template:
+      type: CloudFormation
+      cloudformation: v0.0.1/template.yaml
+    field_definitions: v0.0.1/fields.yaml
+    group_definitions: v0.0.1/groups.yaml
+  - revision: 2.0.0
+    template:
+      type: CloudFormation
+      cloudformation: ../shared/aws-shipper/v0.0.10/template.yaml
+    field_definitions: v2.0.0/fields.yaml
+    group_definitions: v2.0.0/groups.yaml
+  - revision: 2.0.1
+    template:
+      type: CloudFormation
+      cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+    field_definitions: v2.0.1/fields.yaml
+    group_definitions: v2.0.1/groups.yaml
