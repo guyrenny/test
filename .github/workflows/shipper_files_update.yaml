@@ -5,6 +5,7 @@ on:
     types: [opened]
     paths:
       - 'integrations/shared/aws-shipper/**/template.yaml'
+  push:
        
   workflow_dispatch:
 
