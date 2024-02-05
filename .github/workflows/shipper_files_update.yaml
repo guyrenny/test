@@ -140,7 +140,7 @@ jobs:
         run: |
           for integration in $(echo $integration_list | tr "," "\n")
           do
-            integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)  
+            integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1) 
             if [ -d "integrations/${integration}/v$integration_version" ]; then            
               cp integrations/$integration/v$integration_version/fields.yaml integrations/$integration/v$integration_new_version/fields.yaml
               cp integrations/$integration/v$integration_version/groups.yaml integrations/$integration/v$integration_new_version/groups.yaml
