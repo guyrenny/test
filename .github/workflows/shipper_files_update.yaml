@@ -125,7 +125,7 @@ jobs:
           for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
-              integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
+              integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1)
               echo "  - revision: $update_version
                     template:
                       type: CloudFormation
