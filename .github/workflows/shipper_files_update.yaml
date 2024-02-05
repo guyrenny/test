@@ -138,6 +138,7 @@ jobs:
 ## add to the new directory fields and group files
       - name: Create fields and groups files
         run: |
+          integration_new_version="1.1.1"
           for integration in $(echo $integration_list | tr "," "\n")
           do
             integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1) 
