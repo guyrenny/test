@@ -32,6 +32,7 @@ jobs:
           git pull origin master
           echo fetch
           git fetch origin
+          git fetch
           echo switch
           git switch $branch_name --track origin/master 
           # need to check if i need this condition
