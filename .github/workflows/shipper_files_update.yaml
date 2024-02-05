@@ -2,7 +2,7 @@ name: integrations files update
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened,synchronize]
     paths:
       - 'integrations/shared/aws-shipper/**/template.yaml'
        
