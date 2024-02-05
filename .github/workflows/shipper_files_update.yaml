@@ -60,6 +60,18 @@ jobs:
           fi
 
 
+# create a new folder with new version
+      - name: Create new directories with new versions
+        run: |
+          template_version=$(cat integrations/shared/aws-shipper/**/template.yaml | grep "SemanticVersion" | grep -oE '[^ ]+$')
+          for integration in $(echo $integration_list | tr "," "\n")
+          do
+            if [ -d "integrations/${integration}" ]; then
+              integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)              
+              mkdir -p integrations/${integration}/v$integration_version
+            fi
+          done
+
 ## update integrations version
 # need to finish this step ( not sure waht i will return) maybe i need to add a script to update the version
       # - name: Update the changelog file
@@ -85,11 +97,13 @@ jobs:
       #       fi
       #     done
 
+
+
 ## update the changloge file
 # need to change the $update_version to the actual versionj
       - name: Update the changloge file
         run: |
-          update_version=1.1.1
+          update_version="1.1.1"
           for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
@@ -118,17 +132,6 @@ jobs:
                       cloudformation: ../shared/aws-shipper/v${{ env.template_version }}/template.yaml
                     field_definitions: v$update_version/fields.yaml
                     group_definitions: v$update_version/groups.yaml" >> integrations/${integration}/v$integration_version/manifest.yaml
-            fi
-          done
-# create a new folder with new version
-      - name: Create new directories with new versions
-        run: |
-          template_version=$(cat integrations/shared/aws-shipper/**/template.yaml | grep "SemanticVersion" | grep -oE '[^ ]+$')
-          for integration in $(echo $integration_list | tr "," "\n")
-          do
-            if [ -d "integrations/${integration}" ]; then
-              integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)              
-              mkdir -p integrations/${integration}/v$integration_version
             fi
           done
 
