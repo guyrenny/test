@@ -122,7 +122,7 @@ jobs:
       - name: Update the menifest file
         run: |
           for integration in $(echo $integration_list | tr "," "\n")
-          update_version=1.1.1
+          update_version="1.1.1"
           do
             if [ -d "integrations/${integration}" ]; then
               integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
