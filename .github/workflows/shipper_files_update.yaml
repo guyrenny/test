@@ -50,19 +50,21 @@ jobs:
         run: |
           echo "All:"
           echo "${{ steps.abc.outputs.all }}"
-          echo "Added:"
-          echo "${{ steps.abc.outputs.modified }}"
           
       - name: Get template version 
         run: |
-          cat "${{ github.event_path }}" | jq
-          changed_path=$(cat "${{ github.event_path }}" | jq -r '.pull_request.changed_files[0]')
-          echo "Changed Path: $changed_path"
-          # Use a regular expression to extract the version
-          if [[ $changed_path =~ v([0-9]+\.[0-9]+\.[0-9]+)/template.yaml ]]; then
-              version="${BASH_REMATCH[1]}"
-              echo "template_version=$template_version" >> $GITHUB_ENV
+          if [[ ${{ steps.abc.outputs.all }} =~ v([0-9]+\.[0-9]+\.[0-9]+_[0-9]+)/template.yaml ]]; then 
+            template_version="${BASH_REMATCH[1]}"
+            echo "template_version=$template_version" >> $GITHUB_ENV
           fi
+          # cat "${{ github.event_path }}" | jq
+          # changed_path=$(cat "${{ github.event_path }}" | jq -r '.pull_request.changed_files[0]')
+          # echo "Changed Path: $changed_path"
+          # # Use a regular expression to extract the version
+          # if [[ $changed_path =~ v([0-9]+\.[0-9]+\.[0-9]+)/template.yaml ]]; then
+          #     version="${BASH_REMATCH[1]}"
+          #     echo "template_version=$template_version" >> $GITHUB_ENV
+          # fi
 
 ## update integrations version
 # need to finish this step ( not sure waht i will return) maybe i need to add a script to update the version
