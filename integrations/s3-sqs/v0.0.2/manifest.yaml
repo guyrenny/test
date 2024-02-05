@@ -1,0 +1,38 @@
+ - version: 1.1.1
+          description_md: |
+            # Changes
+            - Update AWS Logs Lambda shipper to v0.0.13_1. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details.
+  - revision: 1.1.1
+          template:
+            type: CloudFormation
+            cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+          field_definitions: v1.1.1/fields.yaml
+          group_definitions: v1.1.1/groups.yaml
+ - version: 1.1.1
+          description_md: |
+            # Changes
+            - Update AWS Logs Lambda shipper to v0.0.13_1. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details.
+  - revision: 1.1.1
+          template:
+            type: CloudFormation
+            cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+          field_definitions: v1.1.1/fields.yaml
+          group_definitions: v1.1.1/groups.yaml
+  - revision: 1.1.1
+          template:
+            type: CloudFormation
+            cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+          field_definitions: v1.1.1/fields.yaml
+          group_definitions: v1.1.1/groups.yaml
+  - revision: 1.1.1
+          template:
+            type: CloudFormation
+            cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+          field_definitions: v1.1.1/fields.yaml
+          group_definitions: v1.1.1/groups.yaml
+  - revision: 1.1.1
+          template:
+            type: CloudFormation
+            cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
+          field_definitions: v1.1.1/fields.yaml
+          group_definitions: v1.1.1/groups.yaml
