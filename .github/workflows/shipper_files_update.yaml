@@ -39,7 +39,20 @@ jobs:
           # git switch $branch_name --track origin/master 
           # need to check if i need this condition
           git pull origin ${branch_name} --rebase
-      
+
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: abc
+        with:
+          format: space-delimited
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Printing
+        run: |
+          echo "All:"
+          echo "${{ steps.abc.outputs.all }}"
+          echo "Added:"
+          echo "${{ steps.abc.outputs.modified }}"
+          
       - name: Get template version 
         run: |
           cat "${{ github.event_path }}" | jq
