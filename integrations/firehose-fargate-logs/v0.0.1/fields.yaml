@@ -1,0 +1,102 @@
+---
+fields:
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder: Your API key
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: cx-cw-logs-firehose
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: The default name of the application that the integration will be used with. This is used as a fallback when no name can be dynamically derived.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Firehose
+    display_name: Subsystem Name
+    tooltip_text: The default name of the Subsystem that the integration will be used with. This is used as a fallback when no subsystem can be dynamically derived.
+    placeholder: Subsystem name
+  - name: EnableMetricsStream
+    visible: false
+    required: true
+    predefined: true
+    type: boolean
+    default_value: false
+    display_name: Activate Metrics Streaming
+    tooltip_text: Activate real-time metrics streaming to Coralogix.
+    placeholder:
+    readonly: true
+  - name: EnableLogsStream
+    visible: false
+    required: true
+    predefined: true
+    type: boolean
+    default_value: true
+    display_name: Activate Logs Streaming
+    tooltip_text: Activate real-time logs streaming to Coralogix.
+    placeholder:
+    readonly: true
+  - name: DynamicMetadataLogs
+    visible: true
+    required: true
+    predefined: true
+    type: boolean
+    default_value: true
+    display_name: Enable Dynamic Metadata
+    tooltip_text: Enable to dynamically retrieve applicationName and subsystemName for logs.
+    placeholder:
+  - name: KinesisStreamAsSourceARN
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Kinesis Stream ARN
+    tooltip_text: Enter the ARN of the Kinesis stream if using Kinesis Stream as source for logs.
+    placeholder:
+    allowed_pattern: '^arn:aws:kinesis:[a-z0-9-]+:[0-9]+:stream\/[a-zA-Z0-9_.-]+$'
+  - name: IntegrationTypeLogs
+    visible: false
+    required: true
+    predefined: true
+    type: text
+    default_value: EksFargate
+    display_name: Log Format Type
+    tooltip_text: The data structure of the Firehose delivery stream for logs.
+    placeholder:
+    readonly: true
+  - name: CloudwatchRetentionDays
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 1
+    display_name: CloudWatch Retention Days
+    tooltip_text: The number of days to retain the logs in CloudWatch Log Groups.
+    placeholder:
+
+
+
+

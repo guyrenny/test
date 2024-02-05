@@ -1,0 +1,207 @@
+---
+fields:
+  - name: AuthenticationType
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: "ApiKey"
+    display_name: Authentication Type
+    tooltip_text: Select one of supported authentication options.
+    placeholder: Authentication Type
+    options:
+      - "ApiKey"
+      - "ExistingSecret"
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key.
+    placeholder: Your API key
+    applicable_if:
+      type: and
+      values:
+        - field_name: "AuthenticationType"
+          value_pattern: "ApiKey"
+  - name: ExistingSecret
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    display_name: AWS Secret Name
+    tooltip_text: In case you want to use AWS Secrets Manager without creating a secret, provide the existing secret name.
+    placeholder: AWS Secret Name
+    applicable_if:
+      type: and
+      values:
+        - field_name: "AuthenticationType"
+          value_pattern: "ExistingSecret"
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: LogCollection
+    display_name: Integration Name
+    tooltip_text: Used to identify the integration
+    placeholder: Add an Integration Name
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: S3LogCollection
+    display_name: Subsystem Name
+    tooltip_text: The subsystem name you wish to allocate to this log shipper (a good
+      starting point may be your AWS account ID).
+    placeholder: Subsystem name
+  - name: S3BucketName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: S3 Bucket Name
+    tooltip_text: The name of the S3 bucket with logs to watch.
+    placeholder: S3 Bucket Name
+    allowed_pattern: '^[0-9A-Za-z\.\-_]*(?<!\.)$'
+  - name: S3KeyPrefix
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: true
+    type: text
+    default_value: ''
+    display_name: S3 Path Prefix
+    tooltip_text: Specify the prefix of the log path within your bucket. This allows you to select and ship only the specified portion of your bucket's logs.
+    placeholder:
+  - name: S3KeySuffix
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: true
+    type: text
+    default_value: ''
+    display_name: S3 Path Suffix
+    tooltip_text: A filter for the suffix of the file path in your bucket.
+    placeholder:
+  - name: FunctionArchitecture
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: x86_64
+    display_name: Lambda Function Architecture
+    tooltip_text: The architecture of the lambda function to be deployed.
+    placeholder:
+    options:
+      - x86_64
+      - arm64
+  - name: FunctionMemorySize
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 1024
+    display_name: Lambda Function Memory Size
+    tooltip_text: The memory limit for the Lambda function should be set within the range of 128 (minimum) to 3008 (maximum) MB. Please avoid altering this setting from the default value.
+    placeholder:
+  - name: FunctionTimeout
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 300
+    display_name: Lambda Function Timeout
+    tooltip_text: The Lambda function timeout limit should be configured within the allowable range of 30 seconds (minimum) to 900 seconds (maximum). Please avoid altering this setting from the default value.
+    placeholder:
+  - name: BufferSize
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 134217728
+    display_name: Buffer Size
+    tooltip_text: 'Coralogix logger buffer size (minimum: 12582912).'
+    placeholder: Buffer Size
+  - name: BlockingPattern
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Blocking Pattern
+    tooltip_text: Specify a regular expression for lines that should be excluded.
+    placeholder:
+  - name: NewlinePattern
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: '(?:\r\n|\r|\n)'
+    display_name: Newline Pattern
+    tooltip_text: This is the pattern for line splitting. Please avoid altering this setting from the default value.
+    placeholder:
+  - name: SamplingRate
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 1
+    display_name: Sampling Rate
+    tooltip_text: Specify the message sending rate, with a minimum value of 1.
+    placeholder: Sampling Rate
+  - name: Debug
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: true
+    type: select
+    default_value: false
+    display_name: Debug
+    tooltip_text: Enable debug mode.
+    placeholder: Debug
+    options:
+      - true
+      - false
+  - name: NotificationEmail
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Notification Email
+    tooltip_text: If the lambda function encounters an error, a notification email will be sent to this address using AWS SNS (Simple Notification Service), assuming you have a functioning SNS set up with a validated domain.
+    placeholder:
+  - name: LayerARN
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Lambda Layer ARN
+    tooltip_text: If you are using SSM, this is the ARN of the Coralogix Security Layer. Please copy the ARN from the serverless application installed in your AWS account under 'SSM'.
+    placeholder:
+

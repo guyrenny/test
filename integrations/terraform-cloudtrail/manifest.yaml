@@ -1,0 +1,27 @@
+definition:
+  short_name: terraform-cloudtrail
+  name: AWS CloudTrail via S3 with Terraform
+  description: "<b>AWS CloudTrail</b> monitors and records account activity across your AWS infrastructure, giving you control over storage, analysis, and remediation actions. Send your CloudTrail logs to Coralogix to enhance your data management, analysis, and monitoring capabilities."
+  icon_details:
+    light: "/assets/integrations/cloudtrail.svg"
+  tags:
+    - Terraform
+    - AWS
+    - CloudTrail
+    - Logs
+    - S3
+  details:
+    - name: the AWS CloudTrail via S3 with Terraform
+      url: https://coralogix.com/docs/cloudtrail-s3-terraform/
+revisions:
+  - revision: 0.0.2
+    template:
+      type: Terraform
+      configuration_blocks: v0.0.2/configuration_blocks.yaml
+    field_definitions: v0.0.2/fields.yaml
+  - revision: 0.0.4
+    template:
+      type: Terraform
+      configuration_blocks: v0.0.4/configuration_blocks.yaml
+    field_definitions: v0.0.4/fields.yaml
+    group_definitions: v0.0.4/groups.yaml

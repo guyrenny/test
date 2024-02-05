@@ -1,0 +1,30 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Integration Name
+    tooltip_text: Display name of the integration
+    placeholder: Integration name
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Application Name
+    tooltip_text: The name of the application
+    placeholder: Application name
+    allowed_pattern: ^[^'\"\s]*$
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: Integration Key
+    tooltip_text: API Key that will allow you to send the data to us
+    placeholder: Add key

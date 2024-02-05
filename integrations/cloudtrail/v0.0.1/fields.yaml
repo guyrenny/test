@@ -1,0 +1,48 @@
+---
+fields:
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder: Your API key
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: CloudTrail
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: CloudTrail
+    display_name: Subsystem Name
+    tooltip_text: The name of the Subsystem that the integration will be used with.
+    placeholder: Subsystem name
+  - name: S3BucketName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: S3 Bucket Name
+    tooltip_text: The name of the S3 bucket with CloudTrail logs to collect.
+    placeholder: S3 Bucket Name with CloudTrail logs
+    allowed_pattern: '^[0-9A-Za-z\.\-_]*(?<!\.)$'

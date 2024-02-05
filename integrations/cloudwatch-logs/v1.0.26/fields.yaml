@@ -1,0 +1,167 @@
+---
+fields:
+  - name: AuthenticationType
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: "ApiKey"
+    display_name: Authentication Type
+    tooltip_text: Select one of supported authentication options.
+    placeholder: Authentication Type
+    options:
+      - "ApiKey"
+      - "ExistingSecret"
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key.
+    placeholder: Your API key
+    applicable_if:
+      type: and
+      values:
+        - field_name: "AuthenticationType"
+          value_pattern: "ApiKey"
+  - name: ExistingSecret
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    display_name: AWS Secret Name
+    tooltip_text: In case you want to use AWS Secrets Manager without creating a secret, provide the existing secret name.
+    placeholder: AWS Secret Name
+    applicable_if:
+      type: and
+      values:
+        - field_name: "AuthenticationType"
+          value_pattern: "ExistingSecret"
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: CloudWatch
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: "The name of your application. You can use a log field. Use following syntax: $.my_log.field."
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Subsystem Name
+    tooltip_text: "The subsystem name of your application. You can use a log field. If left empty will be populated from Log Group Name. Use following syntax: $.my_log.field."
+    placeholder: Subsystem name
+  - name: CloudWatchLogGroupName
+    visible: true
+    required: true
+    predefined: false
+    # Being provided as a list_text here just for the presentation purpose - passed further as a comma separated string.
+    type: list_text
+    default_value:
+    display_name: CloudWatch Log Group Names
+    tooltip_text: Has to contain log group names you would like to forward to Coralogix separated by comma.
+    placeholder: CloudWatch Log Group Names
+  - name: FunctionArchitecture
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: x86_64
+    display_name: Lambda Function Architecture
+    tooltip_text: The architecture of the lambda function to be deployed.
+    placeholder:
+    options:
+      - x86_64
+      - arm64
+  - name: FunctionMemorySize
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 1024
+    display_name: Lambda Function Memory Size
+    tooltip_text: The memory limit for the Lambda function should be set within the range of 128 (minimum) to 3008 (maximum) MB. Please avoid altering this setting from the default value.
+    placeholder:
+  - name: FunctionTimeout
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 300
+    display_name: Lambda Function Timeout
+    tooltip_text: The Lambda function timeout limit should be configured within the allowable range of 30 seconds (minimum) to 900 seconds (maximum). Please avoid altering this setting from the default value.
+    placeholder:
+  - name: NewlinePattern
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: '(?:\r\n|\r|\n)'
+    display_name: Newline Pattern
+    tooltip_text: This is the pattern for line splitting. Please avoid altering this setting from the default value.
+    placeholder:
+  - name: SamplingRate
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: number
+    default_value: 1
+    display_name: Sampling Rate
+    tooltip_text: Specify the message sending rate, with a minimum value of 1.
+    placeholder: Sampling Rate
+  - name: BufferCharset
+    group_id: AdvancedSettings
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: utf8
+    display_name: Buffer Charset
+    tooltip_text: The charset to use for buffer decoding.
+    placeholder: Buffer Charset
+    options:
+      - utf8
+      - ascii
+  - name: NotificationEmail
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Notification Email
+    tooltip_text: If the lambda function encounters an error, a notification email will be sent to this address using AWS SNS (Simple Notification Service), assuming you have a functioning SNS set up with a validated domain.
+    placeholder:
+  - name: LayerARN
+    group_id: AdvancedSettings
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Lambda Layer ARN
+    tooltip_text: If you are using SSM, this is the ARN of the Coralogix Security Layer. Please copy the ARN from the serverless application installed in your AWS account under 'SSM'.
+    placeholder:
+
+

@@ -1,0 +1,88 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AzureDiagnosticMetrics
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: PrivateKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Api Key
+    placeholder_text: API key
+  - name: CoralogixApplication
+    visible: true
+    required: false
+    predefined: true
+    type: text
+    default_value: Azure
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: CoralogixSubsystem
+    visible: true
+    required: false
+    predefined: true
+    type: text
+    default_value: DiagnosticData
+    display_name: Subsystem Name
+    tooltip_text: The subsystem name you wish to allocate to this log shipper (a good
+      starting point may be your AWS account ID).
+    placeholder: Subsystem name
+  - name: EventhubResourceGroup
+    visible: true
+    required: true
+    predefined: false
+    default_value: ""
+    type: text
+    display_name: EventHub Resource Group Name
+    tooltip_text: The name of the Resource Group that contains the EventHub.
+    placeholder: EventHub Resource Group Name
+  - name: EventhubNamespace
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value: ""
+    display_name: EventHub Namespace
+    tooltip_text: "The name of the EventHub Namespace."
+    placeholder: EventHub Namespace
+  - name: EventhubInstanceName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value: ""
+    display_name: EventHub Instance Name
+    tooltip_text: The name of the EventHub Instance.
+    placeholder: EventHub Instance Name
+  - name: EventhubSharedAccessPolicyName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value: ""
+    display_name: EventHub Shared Access Policy Name
+    tooltip_text: "The name of the EventHub Namespace Shared Access Policy."
+    placeholder: EventHub Shared Access Policy Name
+  - name: FunctionAppServicePlanType
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: "Consumption"
+    display_name: Function App Service Plan Type
+    tooltip_text: Type of service plan to use for the integration. Consumption is cheapest with support for ‘public’ storage accounts. Use Premium if you need to use VNet to configure access to restricted storage accounts.
+    placeholder: Function App Service Plan Type
+    options:
+      - "Consumption"
+      - "Premium"

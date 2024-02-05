@@ -1,0 +1,17 @@
+definition:
+  short_name: pagerduty
+  name: PagerDuty
+  description: Coralogix allows you to monitor PagerDuty incidents' through webhooks. You can receive HTTP callbacks when incidents are triggered and updated. Using alerts and visualizations you can gain insight into the status of these incidents. Having both PagerDuty and application/infrastructure logs consolidated within Coralogix allows you to view and analyze incidents’ trend. This can help with root cause and impact analysis as well as in correlating resources with issues.
+  icon_details:
+    light: "assets/integrations/pagerduty.svg"
+  tags:
+    - Push
+    - PagerDuty
+  details:
+    - name: PagerDuty
+      url: https://coralogix.com/docs/pagerduty-data-ingestion/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

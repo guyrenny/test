@@ -1,0 +1,74 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+  - name: ApplicationName
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Application Name
+    tooltip_text: The default name of the application that the integration will be used with. This is used as a fallback when no labels match.
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Subsystem Name
+    tooltip_text: The default name of the subsystem that the integration will be used with. This is used as a fallback when no labels match.
+    placeholder: Subsystem name
+  - name: ApplicationLabels
+    visible: true
+    required: false
+    predefined: false
+    type: list_text
+    default_value:
+    display_name: Application Label Selection
+    tooltip_text: Select labels whose values will be used as the Application Name. If more than one label can be matched, the first match in the list will be used.
+    placeholder: Type metric label name
+  - name: SubsystemLabels
+    visible: true
+    required: false
+    predefined: false
+    type: list_text
+    default_value:
+    display_name: Subsystem Label Selection
+    tooltip_text: Select labels whose values will be used as the Subsystem Name. If more than one label can be matched, the first match in the list will be used.
+    placeholder: Type metric label name
+  - name: DatasetId
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Dataset Id
+    tooltip_text: Corresponds to the BigQuery dataset.
+    placeholder: Dataset Id
+  - name: TableId
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: cloud_trace
+    display_name: Table Id
+    tooltip_text: Corresponds to the BigQuery table created by GCP. By default, the table name is cloud_trace.
+    placeholder: Table Id
+  - name: ServiceAccountKey
+    visible: false
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Service Account Key
+    tooltip_text:
+    placeholder:

@@ -1,0 +1,16 @@
+definition:
+  short_name: StatusPage-Tracker
+  name: Statuspage Tracker
+  description: Coralogix allows you to monitor any status pages which share their RSS/Atom feed. Using alerts and visualizations you can gain insight into the status of incidents. Having both Statuspage and application/infrastructure logs consolidated within Coralogix allows you to view and analyze incident trends. This can help with root cause and impact analysis as well as in correlating resources with issues.
+  icon_details:
+    light: "/assets/integrations/statuspage.svg"
+  tags:
+    - PULL
+  details:
+    - name: Statuspage Tracker
+      url: https://coralogix.com/docs/statuspage-logs/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

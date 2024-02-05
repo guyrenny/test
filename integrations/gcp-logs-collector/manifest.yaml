@@ -1,0 +1,16 @@
+definition:
+  short_name: gcp-logs-collector
+  name: GCP Logs
+  description: "Google Cloud Platform provides built-in monitoring and observability tools that allow users to collect and analyze logs, metrics, and traces from their GCP resources. Send Google Cloud <a target='_blank' href='https://cloud.google.com/logging/docs'>logs</a> seamlessly to Coralogix. Search, analyze, and visualize your data, gaining insights into application behavior, identifying errors, and troubleshooting problems."
+  icon_details:
+    light: "/assets/integrations/gcp.svg"
+  tags:
+    - GCP
+  details:
+    - name: GCP Logs
+      url: https://coralogix.com/docs/gcp-logs
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

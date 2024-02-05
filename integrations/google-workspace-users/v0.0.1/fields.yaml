@@ -1,0 +1,47 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: GoogleWorkspace
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+  - name: ServiceAccountKey
+    visible: false
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Service Account Key
+    tooltip_text:
+    placeholder:
+  - name: OrganizationName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Organization Name
+    tooltip_text: The name of the organization on Google Workspace to be monitored. To be found in 'IAM & Admin' -> 'Settings' on Google Cloud.
+    placeholder:
+  - name: OrganizationId
+    visible: true
+    required: true
+    predefined: false
+    type: number
+    default_value:
+    display_name: Organization Id
+    tooltip_text: The id of the organization to be monitored. To be found in 'IAM & Admin' -> 'Settings' on Google Cloud.
+    placeholder:
+  - name: ImpersonatedEmail
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Impersonated Email
+    tooltip_text: Existing account the integration will act as on Google Workspace, in order to be able to access the data.
+    placeholder: your.name@company.com

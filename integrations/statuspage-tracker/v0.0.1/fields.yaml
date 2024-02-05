@@ -1,0 +1,20 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value:
+    display_name: Integration Name
+    tooltip_text:
+    placeholder: Service Name
+  - name: RSSFeedUrl
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: RSS Feed URL
+    tooltip_text:
+    placeholder: www.status.pagerduty.com

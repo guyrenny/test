@@ -1,0 +1,17 @@
+definition:
+  short_name: slack
+  name: Slack
+  description: You can gain insight on all notifications which are sent to the particular channel and later to visualize them in Coralogix. This can help with root cause and impact analysis as well as in correlating resources with issues.
+  icon_details:
+    light: "assets/integrations/slack.svg"
+  tags:
+    - Push
+    - Slack
+  details:
+    - name: Slack
+      url: https://coralogix.com/docs/slack-data-ingestion/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

@@ -1,0 +1,18 @@
+definition:
+  short_name: AWS-Status-Logs
+  name: AWS Status Logs
+  description: Send your AWS logs to Coralogix to improve your root-cause and impact analysis capabilities surrounding your AWS-represented events. Monitor the health and performance of your AWS-based notification system in real-time using Coralogix log analytic capabilities, alerts, and top-notch visualization features.
+  icon_details:
+    light: "/assets/integrations/aws.svg"
+    dark: "/assets/integrations/aws-dark.svg"
+  tags:
+    - PULL
+    - AWS
+  details:
+    - name: AWS Status Logs
+      url: https://coralogix.com/docs/aws-status-logs/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

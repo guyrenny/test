@@ -1,0 +1,241 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "CoralogixPrivateKey": {
+            "type": "string",
+            "defaultValue": "{{CoralogixPrivateKey}}",
+            "allowedValues": [
+                "{{CoralogixPrivateKey}}"
+            ],
+            "metadata": {
+                "description": "The private key of the Coralogix account."
+            }
+        },
+        "CoralogixApplication": {
+            "type": "string",
+            "defaultValue": "{{CoralogixApplication}}",
+            "allowedValues": [
+                "{{CoralogixApplication}}"
+            ],
+            "metadata": {
+                "description": "The name of the Application in Coralogix."
+            }
+        },
+        "CoralogixSubsystem": {
+            "type": "string",
+            "defaultValue": "{{CoralogixSubsystem}}",
+            "allowedValues": [
+                "{{CoralogixSubsystem}}"
+            ],
+            "metadata": {
+                "description": "The name of the Subsystem in Coralogix."
+            }
+        },
+        "StorageAccountName": {
+            "type": "string",
+            "defaultValue": "{{StorageAccountName}}",
+            "allowedValues": [
+                "{{StorageAccountName}}"
+            ],
+            "metadata": {
+                "description": "The name of the storage account containing the Blob container. Must be of type StorageV2 (general purpose v2)."
+            }
+        },
+        "StorageAccountResourceGroup": {
+            "type": "string",
+            "defaultValue": "{{StorageAccountResourceGroup}}",
+            "allowedValues": [
+                "{{StorageAccountResourceGroup}}"
+            ],
+            "metadata": {
+                "description": "The resource group name of the storage account containing the Blob."
+            }
+        },
+        "StorageQueueName": {
+            "type": "string",
+            "defaultValue": "{{StorageQueueName}}",
+            "allowedValues": [
+                "{{StorageQueueName}}"
+            ],
+            "metadata": {
+                "description": "The name of the storage queue."
+            }
+        },
+        "FunctionAppServicePlanType": {
+            "type": "string",
+            "defaultValue": "{{FunctionAppServicePlanType}}",
+            "allowedValues": [
+                "{{FunctionAppServicePlanType}}"
+            ],
+            "metadata": {
+                "description": "The type of the Function App Service Plan. Choose Premium if you need vNet Support."
+            }
+        }
+    },
+    "variables": {
+        "uniqueResourceGroupName": "[concat('Coralogix-QueueStorage-Integration-', uniqueString('{{IntegrationId}}'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2022-09-01",
+            "name": "[variables('uniqueResourceGroupName')]",
+            "location": "[deployment().location]",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "cgxQueueStorageIntegration",
+            "resourceGroup" : "[variables('uniqueResourceGroupName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups/', variables('uniqueResourceGroupName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.EventGrid/eventSubscriptions",
+                            "apiVersion": "2022-06-15",
+                            "name": "integrationStatusReporter",
+                            "properties": {
+                                "destination": {
+                                    "endpointType": "WebHook",
+                                    "properties": {
+                                        "endpointUrl": "[concat('https://ingress.', '{{CoralogixDomain}}', '/integrations/azure-cloud-events/v1/events')]",
+                                        "deliveryAttributeMappings": [
+                                            {
+                                                "name": "Authorization",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "[concat('Bearer ', parameters('CoralogixPrivateKey'))]",
+                                                    "isSecret": true
+                                                }
+                                            },
+                                            {
+                                                "name": "IntegrationId",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "{{IntegrationId}}",
+                                                    "isSecret": false
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "filter": {
+                                    "subjectBeginsWith": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', variables('uniqueResourceGroupName'), '/providers/Microsoft.Resources/deployments/cgxQueueStorageIntegration')]",
+                                    "includedEventTypes": [
+                                        "Microsoft.Resources.ResourceWriteSuccess",
+                                        "Microsoft.Resources.ResourceWriteFailure"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "type": "Microsoft.EventGrid/eventSubscriptions",
+                            "apiVersion": "2022-06-15",
+                            "name": "resourceGroupDeleteReporter",
+                            "dependsOn":[
+                                "Microsoft.EventGrid/eventSubscriptions/integrationStatusReporter"
+                            ],
+                            "properties": {
+                                "destination": {
+                                    "endpointType": "WebHook",
+                                    "properties": {
+                                        "endpointUrl": "[concat('https://ingress.', '{{CoralogixDomain}}', '/integrations/azure-cloud-events/v1/events')]",
+                                        "deliveryAttributeMappings": [
+                                            {
+                                                "name": "Authorization",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "[concat('Bearer ', parameters('CoralogixPrivateKey'))]",
+                                                    "isSecret": true
+                                                }
+                                            },
+                                            {
+                                                "name": "IntegrationId",
+                                                "type": "Static",
+                                                "properties": {
+                                                    "value": "{{IntegrationId}}",
+                                                    "isSecret": false
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "filter": {
+                                    "includedEventTypes": [
+                                        "Microsoft.EventGrid.SubscriptionDeletedEvent"
+                                    ],
+                                    "advancedFilters": [
+                                        {
+                                            "key": "subject",
+                                            "operatorType": "StringBeginsWith",
+                                            "value": "[concat('/subscriptions/', subscription().subscriptionId)]"
+                                        },
+                                        {
+                                            "key":"topic",
+                                            "operatorType": "StringBeginsWith",
+                                            "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', variables('uniqueResourceGroupName'))]"
+                                        }
+                                    ]
+                                }, 
+                                "scope": "[concat('/subscriptions/', subscription().subscriptionId)]"
+                            }
+                        },
+                        {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2021-04-01",
+                            "name": "linkedTemplate",
+                            "dependsOn": [
+                                "Microsoft.EventGrid/eventSubscriptions/integrationStatusReporter"
+                            ],
+                            "properties": {
+                                "mode": "Incremental",
+                                "templateLink": {
+                                    "uri": "https://raw.githubusercontent.com/coralogix/coralogix-azure-serverless/master/StorageQueue/ARM/StorageQueue.json",
+                                    "contentVersion": "1.0.0.0"
+                                },
+                                "parameters": {
+                                    "CoralogixRegion": {
+                                        "value": "Custom"
+                                    },
+                                    "CustomURL": {
+                                        "value": "{{CustomURL}}"
+                                    },
+                                    "CoralogixPrivateKey": {
+                                        "value": "[parameters('CoralogixPrivateKey')]"
+                                    },
+                                    "CoralogixApplication": {
+                                        "value": "[parameters('CoralogixApplication')]"
+                                    },
+                                    "CoralogixSubsystem": {
+                                        "value": "[parameters('CoralogixSubsystem')]"
+                                    },
+                                    "StorageAccountName": {
+                                        "value": "[parameters('StorageAccountName')]"
+                                    },
+                                    "StorageAccountResourceGroup": {
+                                        "value": "[parameters('StorageAccountResourceGroup')]"
+                                    },
+                                    "StorageQueueName": {
+                                        "value": "[parameters('StorageQueueName')]"
+                                    },
+                                    "FunctionAppServicePlanType": {
+                                        "value": "[parameters('FunctionAppServicePlanType')]"
+                                    }
+                                }
+                            }
+                        }
+
+                    ]
+                }
+            }
+        }
+    ]
+}

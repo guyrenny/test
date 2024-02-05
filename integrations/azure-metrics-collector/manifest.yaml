@@ -1,0 +1,20 @@
+definition:
+  short_name: azure-metrics-collector
+  name: Azure Metrics
+  description: "Microsoft Azure provides built-in monitoring and observability tools that allow users to collect and analyze metrics and logs from their Azure resources. Send Azure <a target='_blank' href='https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-platform-metrics'>metrics</a> seamlessly to Coralogix. Search, analyze, and visualize your data, gaining insights into application behavior, identifying errors, and troubleshooting problems."
+  icon_details:
+    light: "/assets/integrations/azure.svg"
+  tags:
+    - Azure
+  details:
+    - name: Azure Metrics
+      url: https://coralogix.com/docs/azure-metrics
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService
+  - revision: 0.0.2
+    field_definitions: v0.0.2/fields.yaml
+    template:
+      type: ManagedService

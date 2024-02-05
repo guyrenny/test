@@ -1,0 +1,6 @@
+---
+introduction: |
+  The Coralogix <a target='_blank' href='https://coralogix.com/docs/kubernetes-dashboard/'>Kubernetes Dashboard</a> is a powerful web-based interface for monitoring and managing Kubernetes clusters. It provides real-time metrics on CPU, memory, network, and disk usage for nodes and pods. Users can track resource trends, optimize workload placement, and troubleshoot issues efficiently. The dashboard also displays Kubernetes events for quick problem identification and resolution. It streamlines cluster management, ensuring efficient performance and smooth application operation.
+  <br><br>For simple and easy automated installation of the Kubernetes Dashboard, Coralogix has created the Kubernetes Collector. With this feature, the exact data (metrics and Kubernetes events) needed for the installation is located and installed via OpenTelemetry, without the need to manually install each different component.
+installation_requirements: |
+  This option is available only to those who do not have an OpenTelemetry Helm chart installed. If you have previously installed OpenTelemetry using the <a target='_blank' href='https://coralogix.com/docs/opentelemetry-using-kubernetes/'>Coralogix Exporter</a> to send us your data, manually upgrade this Helm chart to its latest version to enable the Kubernetes Dashboard feature.

@@ -1,0 +1,88 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AzureBlobStorage
+    display_name: Integration Name
+    tooltip_text:
+    placeholder:
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: PrivateKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder_text: API key
+  - name: CoralogixApplication
+    visible: true
+    required: false
+    predefined: true
+    type: text
+    default_value: Azure
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with.
+    placeholder: Application name
+  - name: CoralogixSubsystem
+    visible: true
+    required: false
+    predefined: true
+    type: text
+    default_value: BlobStorage
+    display_name: Subsystem Name
+    tooltip_text: The subsystem name you wish to allocate to this log shipper (a good
+      starting point may be your AWS account ID).
+    placeholder: Subsystem name
+  - name: EventGridSystemTopicName
+    visible: true
+    required: false
+    predefined: false
+    default_value: "cgxEventGridTopic"
+    type: text
+    display_name: Event Grid System Topic
+    tooltip_text: The name of an existing Event Grid System Topic for the storage account containing the blob container.
+    placeholder: Event Grid System Topic
+  - name: StorageAccountName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value: ""
+    display_name: Storage Account Name
+    tooltip_text: The name of the storage account containing the Blob container. Must be of type StorageV2 (general purpose v2)
+    placeholder:
+  - name: StorageAccountResourceGroup
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value: ""
+    display_name: Resource Group Name
+    tooltip_text: The resource group name of the storage account containing the Blob container.
+    placeholder: Resource Group Name
+  - name: BlobContainerName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value: ""
+    display_name: Blob Container Name
+    tooltip_text: "The name of the Blob container."
+    placeholder:
+  - name: FunctionAppServicePlanType
+    visible: true
+    required: true
+    predefined: true
+    type: select
+    default_value: "Consumption"
+    display_name: Function App Service Plan Type
+    tooltip_text: Type of service plan to use for the integration. Consumption is cheapest with support for ‘public’ storage accounts. Use Premium if you need to use VNet to configure access to restricted storage accounts.
+    placeholder: Function App Service Plan Type
+    options:
+      - "Consumption"
+      - "Premium"

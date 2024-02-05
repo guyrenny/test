@@ -1,0 +1,38 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Intercom
+    display_name: Integration Name
+    tooltip_text:
+    placeholder: Add an Integration Name
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Your API Key
+    tooltip_text:
+    placeholder: Your API Key
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: intercom
+    display_name: Application Name
+    tooltip_text:
+    placeholder: Application Name
+  - name: SubsystemName
+    visible: true
+    required: false
+    predefined: false
+    type: text
+    default_value:
+    display_name: Subsystem Name
+    tooltip_text: If the subsystem is not provided, it will be extracted from the logs.
+    placeholder: Subsystem Name

@@ -1,0 +1,3 @@
+default: |
+  <p>To start sending your logs to Coralogix, it's necessary to configure log_router built into Fargate Kubelet to route your application logs to the Kinesis Data Firehose stream called <strong>{{ integrationName }}-logs</strong>.</p>
+

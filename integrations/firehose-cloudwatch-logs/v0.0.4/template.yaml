@@ -1,0 +1,324 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Send Kinesis Firehose stream data to Coralogix.
+Parameters:
+  CoralogixRegion:
+    Type: String
+    Description: The region of your Coralogix Account [Europe, Europe2, India, Singapore, US, US2]. If set to Custom, you must provide a CustomDomain otherwise url will be invalid.
+    AllowedValues:
+      - Custom
+      - Europe
+      - Europe2
+      - India
+      - Singapore
+      - US
+      - US2
+    Default: Custom
+  CustomDomain:
+    Type: String
+    Description: The Custom Domain. If set, will be the domain used to send telemetry (e.g. coralogix.com, eu2.coralogix.com, coralogixsg.com).
+    Default: ""
+  ApiKey:
+    Type: String
+    Description: The Coralogix Api key which is used to validate your authenticity.
+    NoEcho: true
+  ApplicationName:
+    Type: String
+    Description: The desired Application Name within the Coralogix Platform. If not set, it will be the delivery stream name.
+    Default: ""
+  SubsystemName:
+    Type: String
+    Description: The desired Subsystem Name within the Coralogix Platform. If not set, it will be the ARN.
+    Default: ""
+  CloudwatchRetentionDays:
+    Type: Number
+    Description: Days of retention in Cloudwatch Log Groups.
+    Default: 1
+  IntegrationTypeLogs:
+    Type: String
+    Description: The data structure of the Firehose delivery stream for logs [CloudWatch_JSON, WAF, CloudWatch_CloudTrail, EksFargate, Default, RawText].
+    AllowedValues:
+      - ""
+      - CloudWatch_JSON
+      - WAF
+      - CloudWatch_CloudTrail
+      - EksFargate
+      - Default
+      - RawText
+    Default: ""
+  KinesisStreamAsSourceARN:
+    Type: String
+    Description: Optional - If using Kinesis Stream As Source of logs, enter the ARN of the Kinesis stream, else leave blank.
+    Default: ""
+  IntegrationId:
+    Type: String
+    Description: The integration ID to register.
+Metadata:
+  SemanticVersion: 0.0.4
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Required"
+        Parameters:
+          - CoralogixRegion
+          - CustomDomain
+          - ApiKey
+          - ApplicationName
+          - SubsystemName
+          - IntegrationId
+      - Label:
+          default: "Others"
+        Parameters:
+          - CloudwatchRetentionDays
+      - Label:
+          default: "Logs Streaming"
+        Parameters:
+          - IntegrationTypeLogs
+          - KinesisStreamAsSourceARN
+Mappings:
+  CoralogixRegionMap:
+    Europe:
+      LogUrl: coralogix.com
+    Europe2:
+      LogUrl: eu2.coralogix.com
+    India:
+      LogUrl: coralogix.in
+    Singapore:
+      LogUrl: coralogixsg.com
+    US:
+      LogUrl: coralogix.us
+    US2:
+      LogUrl: cx498.coralogix.com
+    Custom:
+      LogUrl: ""
+Conditions:
+  IsApplicationName: !Not [!Equals [!Ref ApplicationName, ""]]
+  IsSubsystemName: !Not [!Equals [!Ref SubsystemName, ""]]
+  IsIntegrationTypeLogs: !Not [!Equals [!Ref IntegrationTypeLogs, ""]]
+  IsCustomDomain: !Equals [!Ref CoralogixRegion, "Custom"]
+  IsKinesisStreamAsSource: !Not [!Equals [!Ref KinesisStreamAsSourceARN, ""]]
+Resources:
+  BackupDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub
+        - 'firehose-${StackGUID}-backup-logs'
+        - {StackGUID: !Select [0, !Split ["-", !Select [2, !Split ["/", !Ref 'AWS::StackId']]]]}
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  DeliveryStreamLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/kinesisfirehose/${AWS::StackName}'
+      RetentionInDays: !Ref CloudwatchRetentionDays
+  DeliveryStreamLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref DeliveryStreamLogGroup
+      LogStreamName: !Ref AWS::StackName
+      
+###################################
+# Firehose Logs Stream
+###################################
+  CloudWatchLogsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-cloudwatchlogs'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: !Sub 'logs.${AWS::Region}.amazonaws.com'
+            Action: sts:AssumeRole
+  CloudWatchLogsPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub '${AWS::StackName}-logs-policy'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - firehose:PutRecord
+              - firehose:PutRecordBatch
+              - kinesis:PutRecord
+              - kinesis:PutRecordBatch
+            Resource:
+              - !Sub 'arn:aws:firehose:${AWS::Region}:${AWS::AccountId}:*'
+          - Effect: Allow
+            Action:
+              - iam:PassRole
+            Resource:
+              - !Sub 'arn:aws:iam::${AWS::AccountId}:role/${CloudWatchLogsRole}'
+      Roles:
+        - Ref: CloudWatchLogsRole
+  FirehoseLogsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: 'firehose.amazonaws.com'
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId:
+                  Ref: AWS::AccountId
+  FirehoseLogsPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub '${AWS::StackName}-firehose-policy'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:AbortMultipartUpload
+              - s3:GetBucketLocation
+              - s3:GetObject
+              - s3:ListBucket
+              - s3:ListBucketMultipartUploads
+              - s3:PutObject
+            Resource:
+              - !Sub 'arn:aws:s3:::${BackupDataBucket}'
+              - !Sub 'arn:aws:s3:::${BackupDataBucket}/*'
+          - Effect: Allow
+            Action:
+              - logs:PutLogEvents
+            Resource: !GetAtt DeliveryStreamLogGroup.Arn
+          - Effect: Allow
+            Action:
+              - kinesis:DescribeStream
+              - kinesis:GetShardIterator
+              - kinesis:GetRecords
+              - kinesis:ListShards
+            Resource:
+              - !Sub 'arn:aws:firehose:${AWS::Region}:${AWS::AccountId}:deliverystream/*'
+              - !Sub 'arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/*'
+      Roles:
+        - Ref: FirehoseLogsRole
+  CoralogixDeliveryLogsStream:
+    DependsOn:
+      - FirehoseLogsPolicy
+      - CloudWatchLogsPolicy
+      - BackupDataBucket
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub '${AWS::StackName}-logs'
+      DeliveryStreamType: !If
+        - IsKinesisStreamAsSource
+        - KinesisStreamAsSource
+        - DirectPut
+      KinesisStreamSourceConfiguration: !If
+        - IsKinesisStreamAsSource
+        - KinesisStreamARN: !Ref KinesisStreamAsSourceARN
+          RoleARN: !GetAtt FirehoseLogsRole.Arn
+        - !Ref 'AWS::NoValue'
+      HttpEndpointDestinationConfiguration:
+        RoleARN: !GetAtt FirehoseLogsRole.Arn
+        EndpointConfiguration:
+          Url: !If
+            - IsCustomDomain
+            - !Sub 'https://firehose-ingress.${CustomDomain}/firehose'
+            - !Sub
+              - 'https://firehose-ingress.${Domain}/firehose'
+              - Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, LogUrl]
+          AccessKey:
+            Ref: ApiKey
+          Name: 'Coralogix'
+        RequestConfiguration:
+          ContentEncoding: GZIP
+          CommonAttributes:
+            - !If
+              - IsApplicationName
+              - AttributeName: 'applicationName'
+                AttributeValue: !Ref ApplicationName
+              - !Ref 'AWS::NoValue'
+            - !If
+              - IsSubsystemName
+              - AttributeName: 'subsystemName'
+                AttributeValue: !Ref SubsystemName
+              - !Ref 'AWS::NoValue'
+            - !If
+              - IsIntegrationTypeLogs
+              - AttributeName: 'integrationType'
+                AttributeValue: !Ref IntegrationTypeLogs
+              - !Ref 'AWS::NoValue'
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName:
+            Ref: DeliveryStreamLogGroup
+          LogStreamName:
+            Ref: DeliveryStreamLogStream
+        BufferingHints:
+          IntervalInSeconds: 60
+          SizeInMBs: 6
+        RetryOptions:
+          DurationInSeconds: 300
+        S3BackupMode: FailedDataOnly
+        S3Configuration:
+          BufferingHints:
+            IntervalInSeconds: 300
+            SizeInMBs: 5
+          BucketARN: !GetAtt BackupDataBucket.Arn
+          CompressionFormat: GZIP
+          RoleARN: !GetAtt FirehoseLogsRole.Arn
+
+  # Used as a bridge because CF doesn't allow for conditional depends on clauses.
+  NonNotifierResourcesAreReady:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Metadata:
+      CloudWatchLogsRoleReady: !Ref CloudWatchLogsRole
+      CloudWatchLogsPolicyReady: !Ref CloudWatchLogsPolicy
+      FirehoseLogsRoleReady: !Ref FirehoseLogsRole
+      FirehoseLogsPolicyReady: !Ref FirehoseLogsPolicy
+      CoralogixDeliveryLogsStreamReady: !Ref CoralogixDeliveryLogsStream
+  IntegrationStatusNotifier:
+    Type: Custom::IntegrationsServiceNotifier
+    DependsOn:
+      - BackupDataBucket
+      - DeliveryStreamLogGroup
+      - DeliveryStreamLogStream
+      - CloudWatchLogsRole
+      - CloudWatchLogsPolicy
+      - FirehoseLogsRole
+      - FirehoseLogsPolicy
+      - CoralogixDeliveryLogsStream
+    Properties:
+      #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
+      IntegrationId: !Ref IntegrationId
+      CoralogixDomain: !Ref CustomDomain
+      CoralogixApiKey: !Ref ApiKey
+
+      # Parameters to track
+      IntegrationName: !Ref "AWS::StackName"
+      SubsystemName: !Ref SubsystemName
+      ApplicationName: !Ref ApplicationName
+      CoralogixRegion: !Ref CoralogixRegion
+      CustomDomain: !Ref CustomDomain
+      CloudwatchRetentionDays: !Ref CloudwatchRetentionDays
+      IntegrationTypeLogs: !Ref IntegrationTypeLogs
+      KinesisStreamAsSourceARN: !Ref KinesisStreamAsSourceARN
+
+Outputs:
+  BackupDataBucketName:
+    Description: S3 Bucket where failed deliveries will be backed-up
+    Value: !Sub
+      - 'firehose-${StackGUID}-backup-logs'
+      - {StackGUID: !Select [0, !Split ["-", !Select [2, !Split ["/", !Ref 'AWS::StackId']]]]}
+  CoralogixDeliveryLogsStreamARN:
+    Description: The ARN for your Kinesis Firehose Delivery Stream, use this as the destination when adding CloudWatch Logs subscription filters
+    Value: !GetAtt CoralogixDeliveryLogsStream.Arn
+  CloudWatchLogsRoleARN:
+    Description: The ARN for your CloudWatch Logs role to write to your delivery stream, use this as the role-arn when adding CloudWatch Logs subscription filters
+    Value: !GetAtt CloudWatchLogsRole.Arn

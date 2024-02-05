@@ -1,0 +1,18 @@
+definition:
+  short_name: github
+  name: GitHub
+  description: Use Coralogix alerts and visualizations to gain insights into the status of repositories, branches, and activities such as commits and pulls, as well as to monitor any modifications to your GitHub repo. Consolidating all logs into Coralogix allows you to view application and infrastructure logs in the context of GitHub when doing root-cause or impact analysis.
+  icon_details:
+    light: "assets/integrations/github.svg"
+    dark: "assets/integrations/github-dark.svg"
+  tags:
+    - Push
+    - GitHub
+  details:
+    - name: GitHub
+      url: https://coralogix.com/docs/github-data-ingestion/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

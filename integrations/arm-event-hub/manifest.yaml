@@ -1,0 +1,22 @@
+definition:
+  short_name: arm-event-hub
+  name: ARM - Event Hub
+  description: "Coralogix offers Azure Resource Manager (ARM) custom template deployments to build your Azure log 
+  and metric pipelines using our Azure Resources Integration Packages. Each template creates a unique dedicated resource group in Event Hub, to which Azure Monitor streams logs or metrics. 
+  Additionally, an Azure function is created for sending monitoring data to Coralogix, and storage accounts are established to which the function writes its own log messages 
+  about successful and failed transmissions."
+  icon_details:
+    light: "/assets/integrations/azure_eventhub.svg"
+  tags:
+    - Azure
+  details:
+    - name: Microsoft Azure
+      url: https://coralogix.com/docs/introduction-to-microsoft-azure/
+    - name: Azure Resources Integration Packages
+      url: https://coralogix.com/docs/azure-resource-manager-arm-integration-packages/
+revisions:
+  - revision: 1.0.0.0
+    template:
+      type: AzureArm
+      azure_arm: v1.0.0.0/template.json
+    field_definitions: v1.0.0.0/fields.yaml

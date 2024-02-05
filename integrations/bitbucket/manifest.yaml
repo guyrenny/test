@@ -1,0 +1,17 @@
+definition:
+  short_name: bitbucket
+  name: Bitbucket
+  description: Coralogix allows you to monitor who, when and what was accessed and modified on your Bitbucket repo. Using Coralogix alerts and visualizations you can get insights into the status of repos and branches, and monitor activities like commits and pulls. Consolidating all logs on your Coralogix dashboard allows you to view application and infrastructure logs in the context of Bitbucket when doing root-cause or impact analysis.
+  icon_details:
+    light: "assets/integrations/bitbucket.svg"
+  tags:
+    - Push
+    - Bitbucket
+  details:
+    - name: Bitbucket
+      url: https://coralogix.com/docs/bitbucket-data-ingestion/
+revisions:
+  - revision: 0.0.1
+    field_definitions: v0.0.1/fields.yaml
+    template:
+      type: ManagedService

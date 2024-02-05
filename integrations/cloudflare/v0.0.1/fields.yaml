@@ -1,0 +1,47 @@
+---
+fields:
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: Cloudflare
+    display_name: Integration Name
+    tooltip_text: Used to identify the integration.
+    placeholder: It can be any name for your integration
+  - name: AuthenticationEmail
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Authentication Email
+    tooltip_text: E-mail address you used for login to Cloudflare.
+    placeholder: your.name@company.com
+  - name: AccountName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Account Name Subdomain
+    tooltip_text: It can be the Cloudflare Account Name or you can provide any other name which will be your subsystem name in Coralogix.
+    placeholder: Account Name
+  - name: CloudflareApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Cloudflare API Key
+    tooltip_text: Cloudflare API Key
+    placeholder: API Key
+  - name: AccountId
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: Account Id
+    tooltip_text: Choose the account in Cloudlfare and in the right column there is a section API where you will find the Account ID.
+    placeholder: Account ID

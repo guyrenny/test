@@ -1,0 +1,379 @@
+#Created automatically from coralogix/coralogix-aws-serverless
+#Link to the repo: https://github.com/coralogix/coralogix-aws-serverless/tree/master/src/resource-metadata
+#
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Send resource metadata  to  Coralogix.
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: Coralogix-Resource-Metadata
+    Description: Send resource metadata to Coralogix.
+    Author: Coralogix
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: LICENSE
+    ReadmeUrl: README.md
+    Labels:
+      - coralogix
+      - metadata
+    HomePageUrl: https://coralogix.com
+    SemanticVersion: 1.2.3
+    SourceCodeUrl: https://github.com/coralogix/coralogix-aws-serverless
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Coralogix configuration
+        Parameters:
+          - CoralogixRegion
+          - ApiKey
+          - CustomDomain
+          - IntegrationId
+      - Label:
+          default: Integration configuration
+        Parameters:
+          - Schedule
+          - ResourceTtlMinutes
+          - LatestVersionsPerFunction
+          - CollectAliases
+          - NotificationEmail
+      - Label:
+          default: Lambda Configuration
+        Parameters:
+          - FunctionArchitecture
+          - FunctionMemorySize
+          - FunctionTimeout
+      - Label:
+          default: Security configuration
+        Parameters:
+          - LayerARN
+          - CreateSecret
+    ParameterLabels:
+      CoralogixRegion:
+        default: Region
+      CustomDomain:
+        default: CustomDomain
+      LayerARN:
+        default: In case you are using SSM This is the ARN of the Coralogix Security Layer. Copy from the ``SSM`` serverless application the ARN that was installed on the AWS account
+      ApiKey:
+        default: Api Key
+      Schedule:
+        default: Schedule
+      LatestVersionsPerFunction:
+        default: Latest Versions Per Function
+      CollectAliases:
+        default: Collect Aliases
+      ResourceTtlMinutes:
+        default: Resource Time-to-live (TTL) in Minutes
+      FunctionArchitecture:
+        default: Architecture
+      FunctionMemorySize:
+        default: Memory
+      FunctionTimeout:
+        default: Timeout
+      NotificationEmail:
+        default: Notification Email
+      IntegrationId:
+        default: Integration ID
+Parameters:
+  CoralogixRegion:
+    Type: String
+    Description: The Coralogix location region [Europe, Europe2, India, Singapore, US, US2]
+    AllowedValues:
+      - DevShared
+      - Staging
+      - Europe
+      - Europe2
+      - India
+      - Singapore
+      - US
+      - US2
+    Default: Europe
+  CustomDomain:
+    Type: String
+    Description: The Coralogix custom domain
+    Default: ''
+  ApiKey:
+    Type: String
+    Description: Your Coralogix secret key or incase you use your own created secret put here the name of your secret that contains the coralogix Api Key
+    NoEcho: true
+  LayerARN:
+    Type: String
+    Description: In case you are using SSM This is the ARN of the Coralogix Security Layer. Copy from the ``SSM`` serverless application the ARN that was installed on the AWS account
+    Default: ''
+  Schedule:
+    Type: String
+    Description: Collect metadata on a specific schedule
+    MaxLength: 256
+    Default: "rate(10 minutes)"
+  LatestVersionsPerFunction:
+    Type: Number
+    Description: How many latest published versions of each Lambda function should be collected
+    MinValue: 0
+    Default: 0
+  CollectAliases:
+    Type: String
+    Description: '[True/False]'
+    Default: 'False'
+  ResourceTtlMinutes:
+    Type: Number
+    Description: Once a resource is collected, how long should it remain valid?
+    Default: 60
+  FunctionArchitecture:
+    Type: String
+    Description: Lambda function architecture [x86_64, arm64]
+    AllowedValues:
+      - x86_64
+      - arm64
+    Default: x86_64
+  FunctionMemorySize:
+    Type: Number
+    Description: Lambda function memory limit
+    MinValue: 128
+    MaxValue: 10240
+    Default: 256
+  FunctionTimeout:
+    Type: Number
+    Description: Lambda function timeout limit
+    MinValue: 30
+    MaxValue: 900
+    Default: 300
+  NotificationEmail:
+    Type: String
+    Description: Failure notification email address
+    MaxLength: 320
+    Default: ""
+  CreateSecret:
+    Type: String
+    Description: In case you want to use SSM without creating a secret, set the value to False and write the name of the secret instead of your ApiKey in the ApkiKey parameter.
+    Default: 'True'
+  IntegrationId:
+    Type: String
+    Description: The integration ID to register.
+Mappings:
+  CoralogixRegionMap:
+    DevShared:
+      MetadataUrl: dev-shared.coralogix.net
+    Staging:
+      MetadataUrl: staging.coralogix.net
+    Europe:
+      MetadataUrl: coralogix.com
+    Europe2:
+      MetadataUrl: eu2.coralogix.com
+    India:
+      MetadataUrl: app.coralogix.in
+    Singapore:
+      MetadataUrl: coralogixsg.com
+    US:
+      MetadataUrl: coralogix.us
+    US2:
+      MetadataUrl: cx498.coralogix.com
+Conditions:
+  IsNotificationEnabled:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: NotificationEmail
+          - ""
+  IsSsmEnabled:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: LayerARN
+          - ""
+  IsNotSsmEnabled:
+    Fn::Equals:
+      - Ref: LayerARN
+      - ''
+  IsRegionCustomUrlEmpty: !Not [!Equals [!Ref CustomDomain, ""]]
+  CreateSecret:
+    Fn::And:
+      - Fn::Not:
+          - Fn::Equals:
+              - Ref: LayerARN
+              - ""
+      - Fn::Equals:
+          - Ref: CreateSecret
+          - 'True'
+Resources:
+  LambdaFunction:
+    Condition: IsNotSsmEnabled
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Send resource metadata to Coralogix.
+      CodeUri:
+        Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
+        Key: resource-metadata.zip
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - Ref: FunctionArchitecture
+      MemorySize:
+        Ref: FunctionMemorySize
+      Timeout:
+        Ref: FunctionTimeout
+      Environment:
+        Variables:
+          CORALOGIX_METADATA_URL: !If
+            - IsRegionCustomUrlEmpty
+            - !Sub 'ingress.${CustomDomain}:443'
+            - !Sub
+              - '${Prefix}${Domain}${Suffix}'
+              - Prefix: ingress.
+                Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, MetadataUrl]
+                Suffix: :443
+          private_key:
+            Ref: ApiKey
+          LATEST_VERSIONS_PER_FUNCTION:
+            Ref: LatestVersionsPerFunction
+          COLLECT_ALIASES:
+            Ref: CollectAliases
+          RESOURCE_TTL_MINUTES:
+            Ref: ResourceTtlMinutes
+          AWS_RETRY_MODE: adaptive
+          AWS_MAX_ATTEMPTS: 10
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule:
+              Ref: Schedule
+            Enabled: True
+      EventInvokeConfig:
+        DestinationConfig:
+          OnFailure:
+            Type: SNS
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: GetLambdaMetadata
+              Effect: Allow
+              Action:
+                - ec2:DescribeInstances
+                - lambda:ListFunctions
+                - lambda:ListVersionsByFunction
+                - lambda:GetFunction
+                - lambda:ListAliases
+                - lambda:ListEventSourceMappings
+                - lambda:GetPolicy
+              Resource: "*"
+  LambdaFunctionSSM:
+    Condition: IsSsmEnabled
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Send resource metadata to Coralogix.
+      CodeUri:
+        Bucket: !Sub 'coralogix-serverless-repo-${AWS::Region}'
+        Key: resource-metadata.zip
+      Layers:
+        - Ref: LayerARN
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - Ref: FunctionArchitecture
+      MemorySize:
+        Ref: FunctionMemorySize
+      Timeout:
+        Ref: FunctionTimeout
+      Environment:
+        Variables:
+          CORALOGIX_METADATA_URL: !If
+            - IsRegionCustomUrlEmpty
+            - !Sub 'ingress.${CustomDomain}:443'
+            - !Sub
+              - '${Prefix}${Domain}${Suffix}'
+              - Prefix: ingress.
+                Domain: !FindInMap [CoralogixRegionMap, !Ref CoralogixRegion, MetadataUrl]
+                Suffix: :443
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/wrapper.sh
+          LATEST_VERSIONS_PER_FUNCTION:
+            Ref: LatestVersionsPerFunction
+          COLLECT_ALIASES:
+            Ref: CollectAliases
+          RESOURCE_TTL_MINUTES:
+            Ref: ResourceTtlMinutes
+          AWS_RETRY_MODE: adaptive
+          AWS_MAX_ATTEMPTS: 10
+          SECRET_NAME: !If
+            - CreateSecret
+            - ""
+            - Ref: ApiKey
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule:
+              Ref: Schedule
+            Enabled: True
+      EventInvokeConfig:
+        DestinationConfig:
+          OnFailure:
+            Type: SNS
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: GetLambdaMetadata
+              Effect: Allow
+              Action:
+                - ec2:DescribeInstances
+                - lambda:ListFunctions
+                - lambda:ListVersionsByFunction
+                - lambda:GetFunction
+                - lambda:ListAliases
+                - lambda:ListEventSourceMappings
+                - lambda:GetPolicy
+              Resource: "*"
+        - SecretsManagerReadWrite
+  PrivateKeySecret:
+    Condition: CreateSecret
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: Coralogix Send Your Data key Secret
+      Name: !Sub
+        - 'lambda/coralogix/${AWS::Region}/${function}'
+        - function: !Ref LambdaFunctionSSM
+      SecretString: !Ref ApiKey
+  LambdaFunctionNotificationSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: IsNotificationEnabled
+    Properties:
+      Protocol: email
+      Endpoint:
+        Ref: NotificationEmail
+      TopicArn: !If
+        - IsSsmEnabled
+        - !Ref LambdaFunctionSSM.DestinationTopic
+        - !Ref LambdaFunction.DestinationTopic
+  # Used as a bridge because CF doesn't allow for conditional depends on clauses.
+  NonNotifierResourcesAreReady:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Metadata:
+      LambdaFunctionReady: !If [ IsNotSsmEnabled, !Ref LambdaFunction, "" ]
+      LambdaFunctionSSMReady: !If [ IsSsmEnabled, !Ref LambdaFunctionSSM, "" ]
+      PrivateKeySecretReady: !If [ CreateSecret, !Ref PrivateKeySecret, "" ]
+      LambdaFunctionNotificationSubscriptionReady: !If [ IsNotificationEnabled, !Ref LambdaFunctionNotificationSubscription, "" ]
+  IntegrationStatusNotifier:
+    Type: Custom::IntegrationsServiceNotifier
+    DependsOn:
+      - NonNotifierResourcesAreReady
+
+    Properties:
+      #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
+      IntegrationId: !Ref IntegrationId
+      CoralogixDomain: !If
+        - IsRegionCustomUrlEmpty
+        - !Ref CustomDomain
+        - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, MetadataUrl ]
+      CoralogixApiKey: !Ref ApiKey
+
+      # Parameters to track
+      IntegrationName: !Ref "AWS::StackName"
+      CoralogixRegion: !Ref CoralogixRegion
+      CustomDomain: !Ref CustomDomain
+      LayerARN: !Ref LayerARN
+      Schedule: !Ref Schedule
+      LatestVersionsPerFunction: !Ref LatestVersionsPerFunction
+      CollectAliases: !Ref CollectAliases
+      ResourceTtlMinutes: !Ref ResourceTtlMinutes
+      FunctionArchitecture: !Ref FunctionArchitecture
+      FunctionMemorySize: !Ref FunctionMemorySize
+      FunctionTimeout: !Ref FunctionTimeout
+      NotificationEmail: !Ref NotificationEmail
+      CreateSecret: !Ref CreateSecret

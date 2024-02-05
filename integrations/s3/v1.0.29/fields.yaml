@@ -1,0 +1,50 @@
+---
+fields:
+  - name: ApiKey
+    visible: true
+    required: true
+    predefined: false
+    type: api_key
+    default_value:
+    display_name: API Key
+    tooltip_text: Coralogix Send-Your-Data API Key
+    placeholder_text: API key
+  - name: IntegrationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: LogCollection
+    display_name: Integration Name
+    tooltip_text: Used to identify the integration
+    placeholder: Add an Integration Name
+    allowed_pattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+  - name: ApplicationName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: AWS
+    display_name: Application Name
+    tooltip_text: The name of the application that the integration will be used with
+    placeholder: Application name
+  - name: SubsystemName
+    visible: true
+    required: true
+    predefined: true
+    type: text
+    default_value: S3LogCollection
+    display_name: Subsystem Name
+    tooltip_text: The subsystem name you wish to allocate to this log shipper (a good
+      starting point may be your AWS account ID)
+    placeholder: Subsystem name
+  - name: S3BucketName
+    visible: true
+    required: true
+    predefined: false
+    type: text
+    default_value:
+    display_name: S3 Bucket Name
+    tooltip_text: The name of the S3 bucket with logs to watch
+    placeholder: S3 Bucket Name
+    allowed_pattern: '^[0-9A-Za-z\.\-_]*(?<!\.)$'
