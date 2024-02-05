@@ -121,8 +121,8 @@ jobs:
 # need to change the $update_version to the actual version
       - name: Update the menifest file
         run: |
-          for integration in $(echo $integration_list | tr "," "\n")
           update_version="1.1.1"
+          for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
               integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
