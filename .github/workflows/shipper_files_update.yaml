@@ -115,7 +115,7 @@ jobs:
               echo " - version: $update_version
                     description_md: |
                       # Changes
-                      - Update AWS Logs Lambda shipper to v${{ env.template_version }}. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details." >> integrations/${integration}/v$integration_version/manifest.yaml
+                      - Update AWS Logs Lambda shipper to v${{ env.template_version }}. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details." >> integrations/${integration}/v$integration_version/changelog.yaml
             fi
           done
 ## update the manifest file
