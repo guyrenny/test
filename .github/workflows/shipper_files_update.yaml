@@ -42,7 +42,9 @@ jobs:
       
       - name: Get template version 
         run: |
+          cat "${{ github.event_path }}" | jq
           changed_path=$(cat "${{ github.event_path }}" | jq -r '.pull_request.changed_files[0]')
+          echo "Changed Path: $changed_path"
           # Use a regular expression to extract the version
           if [[ $changed_path =~ v([0-9]+\.[0-9]+\.[0-9]+)/template.yaml ]]; then
               version="${BASH_REMATCH[1]}"
