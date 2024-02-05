@@ -33,8 +33,10 @@ jobs:
           echo fetch
           git fetch origin
           git fetch
+          git branch
           echo switch
-          git switch $branch_name --track origin/master 
+          git checkout $branch_name
+          # git switch $branch_name --track origin/master 
           # need to check if i need this condition
           git pull origin ${branch_name} --rebase
       
