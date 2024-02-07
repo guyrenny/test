@@ -74,7 +74,7 @@ jobs:
       - name: Update the changloge file
         run: |
           update_version="1.1.1"
-          chmod +x /scripts/update_version.sh
+          chmod +x ./scripts/update_version.sh
           for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
@@ -91,7 +91,7 @@ jobs:
       - name: Update the menifest file
         run: |
           update_version="1.1.1"
-          chmod +x /scripts/update_version.sh
+          chmod +x ./scripts/update_version.sh
           for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
