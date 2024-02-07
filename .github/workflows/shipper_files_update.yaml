@@ -98,9 +98,9 @@ jobs:
               integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
               update_version=$(./scripts/update_version.sh $integration_version)
               echo " - version: $update_version
-                    description_md: |
-                      # Changes
-                      - Update AWS Logs Lambda shipper to v${{ env.template_version }}. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details." >> integrations/${integration}/changelog.yaml
+              description_md: |
+                # Changes
+                - Update AWS Logs Lambda shipper to v${{ env.template_version }}. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details." >> integrations/${integration}/changelog.yaml
             fi
           done
           
