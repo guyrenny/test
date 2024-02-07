@@ -59,11 +59,12 @@ jobs:
       - name: Create new directories with new versions
         run: |
           template_version=$(cat integrations/shared/aws-shipper/**/template.yaml | grep "SemanticVersion" | grep -oE '[^ ]+$')
+          chmod +x ./scripts/update_version.sh
           for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
               integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)              
-              integration_version="1.1.1"
+              integration_version=$(./scripts/update_version.sh integration_version)
               mkdir -p integrations/${integration}/v$integration_version
             fi
           done
@@ -73,8 +74,7 @@ jobs:
 # need to change the $update_version to the actual versionj
       - name: Update the changloge file
         run: |
-          update_version="1.1.1"
-          chmod +x /scripts/update_version.sh
+          chmod +x ./scripts/update_version.sh
           for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
@@ -90,8 +90,7 @@ jobs:
 # need to change the $update_version to the actual version
       - name: Update the menifest file
         run: |
-          update_version="1.1.1"
-          chmod +x /scripts/update_version.sh
+          chmod +x ./scripts/update_version.sh
           for integration in $(echo $integration_list | tr "," "\n")
           do
             if [ -d "integrations/${integration}" ]; then
@@ -108,9 +107,10 @@ jobs:
 ## add to the new directory fields and group files
       - name: Create fields and groups files
         run: |
-          integration_new_version="1.1.1"
+          chmod +x ./scripts/update_version.sh
           for integration in $(echo $integration_list | tr "," "\n")
           do
+            integration_new_version=$(./scripts/update_version.sh integration_version)
             integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1) 
             if [ -d "integrations/${integration}/v$integration_version" ]; then            
               cp integrations/$integration/v$integration_version/fields.yaml integrations/$integration/v$integration_new_version/fields.yaml
