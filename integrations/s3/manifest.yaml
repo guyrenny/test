@@ -43,3 +43,9 @@ revisions:
       cloudformation: ../shared/aws-shipper/v0.0.13_1/template.yaml
     field_definitions: v2.0.1/fields.yaml
     group_definitions: v2.0.1/groups.yaml
+  - revision: 2.0.2
+          template:
+            type: CloudFormation
+            cloudformation: ../shared/aws-shipper/v0.0.13/template.yaml
+          field_definitions: v2.0.2/fields.yaml
+          group_definitions: v2.0.2/groups.yaml
