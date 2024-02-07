@@ -2,7 +2,7 @@ name: integrations files update
 
 on:
   pull_request:
-    types: [opened,updated]
+    types: [opened]
     paths:
       - 'integrations/shared/aws-shipper/**/template.yaml'
        
@@ -28,83 +28,33 @@ jobs:
           echo "branch_name=$branch_name" >> $GITHUB_ENV
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          echo pull
           git pull origin master
           echo fetch
           git fetch origin
+          git fetch
+          git branch
           echo switch
-          git switch $branch_name --track origin/master 
+          git checkout $branch_name
+          # git switch $branch_name --track origin/master 
           # need to check if i need this condition
           git pull origin ${branch_name} --rebase
-      
+
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: get_changed_files
+        with:
+          format: space-delimited
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Get template version 
         run: |
-          changed_path=$(cat "${{ github.event_path }}" | jq -r '.pull_request.changed_files[0]')
-          # Use a regular expression to extract the version
-          if [[ $changed_path =~ v([0-9]+\.[0-9]+\.[0-9]+)/template.yaml ]]; then
-              version="${BASH_REMATCH[1]}"
-              echo "template_version=$template_version" >> $GITHUB_ENV
+          changed_files="${{ steps.get_changed_files.outputs.all }}"
+          if [[ $changed_files =~ v([0-9]+\.[0-9]+\.[0-9]+)/template.yaml ]]; then 
+            template_version="${BASH_REMATCH[1]}"
+            echo "template_version=$template_version" >> $GITHUB_ENV
           fi
 
-## update integrations version
-# need to finish this step ( not sure waht i will return) maybe i need to add a script to update the version
-      # - name: Update the changelog file
-      #   run: |
-      #     for integration in $(echo $integration_list | tr "," "\n")
-      #     do
-      #       if [ -d "integrations/${integration}" ]; then
-      #         integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
-      #         version=$integration_version
-
-      #         # break down the version number into it's components
-      #         regex="([0-9]+).([0-9]+).([0-9]+)"
-      #         if [[ $version =~ $regex ]]; then
-      #         old_version="${BASH_REMATCH[3]}"
-      #         fi
-
-      #         # check paramater to see which number to increment
-      #         new_version=$(echo $old_version+1 | bc)
-
-
-      #         # echo the new version number
-      #         echo "new version: ${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$new_version"
-      #       fi
-      #     done
-
-## update the changloge file
-# need to change the $update_version to the actual versionj
-      - name: Update the changloge file
-        run: |
-          update_version=1.1.1
-          for integration in $(echo $integration_list | tr "," "\n")
-          do
-            if [ -d "integrations/${integration}" ]; then
-              integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
-
-              integration_new_version=
-
-              echo " - version: $update_version
-                    description_md: |
-                      # Changes
-                      - Update AWS Logs Lambda shipper to v${{ env.template_version }}. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details." >> integrations/${integration}/manifest.yaml
-            fi
-          done
-## update the manifest file
-# need to change the $update_version to the actual version
-      - name: Update the menifest file
-        run: |
-          for integration in $(echo $integration_list | tr "," "\n")
-          update_version=1.1.1
-          do
-            if [ -d "integrations/${integration}" ]; then
-              integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
-              echo "  - revision: $update_version
-                    template:
-                      type: CloudFormation
-                      cloudformation: ../shared/aws-shipper/v${{ env.template_version }}/template.yaml
-                    field_definitions: v$update_version/fields.yaml
-                    group_definitions: v$update_version/groups.yaml" >> integrations/${integration}/manifest.yaml
-            fi
-          done
 # create a new folder with new version
       - name: Create new directories with new versions
         run: |
@@ -113,16 +63,55 @@ jobs:
           do
             if [ -d "integrations/${integration}" ]; then
               integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)              
+              integration_version="1.1.1"
               mkdir -p integrations/${integration}/v$integration_version
             fi
           done
+## update integrations version
 
+## update the changloge file
+# need to change the $update_version to the actual versionj
+      - name: Update the changloge file
+        run: |
+          update_version="1.1.1"
+          chmod +x /scripts/update_version.sh
+          for integration in $(echo $integration_list | tr "," "\n")
+          do
+            if [ -d "integrations/${integration}" ]; then
+              integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)
+              update_version=$(./scripts/update_version.sh integration_version)
+              echo " - version: $update_version
+                    description_md: |
+                      # Changes
+                      - Update AWS Logs Lambda shipper to v${{ env.template_version }}. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details." >> integrations/${integration}/v$integration_version/changelog.yaml
+            fi
+          done
+## update the manifest file
+# need to change the $update_version to the actual version
+      - name: Update the menifest file
+        run: |
+          update_version="1.1.1"
+          chmod +x /scripts/update_version.sh
+          for integration in $(echo $integration_list | tr "," "\n")
+          do
+            if [ -d "integrations/${integration}" ]; then
+              integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1)
+              update_version=$(./scripts/update_version.sh integration_version)
+              echo "  - revision: $update_version
+                    template:
+                      type: CloudFormation
+                      cloudformation: ../shared/aws-shipper/v${{ env.template_version }}/template.yaml
+                    field_definitions: v$update_version/fields.yaml
+                    group_definitions: v$update_version/groups.yaml" >> integrations/${integration}/v$integration_version/manifest.yaml
+            fi
+          done
 ## add to the new directory fields and group files
       - name: Create fields and groups files
         run: |
+          integration_new_version="1.1.1"
           for integration in $(echo $integration_list | tr "," "\n")
           do
-            integration_version=$(cat ./integrations/$integration/changelog.yaml | grep " version" | grep -oE '[^ ]+$' | tail -1)  
+            integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1) 
             if [ -d "integrations/${integration}/v$integration_version" ]; then            
               cp integrations/$integration/v$integration_version/fields.yaml integrations/$integration/v$integration_new_version/fields.yaml
               cp integrations/$integration/v$integration_version/groups.yaml integrations/$integration/v$integration_new_version/groups.yaml
@@ -136,7 +125,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add .
           git status
-
 ## git commit
       - name: Commit changes
         uses: planetscale/ghcommit-action@v0.1.19
