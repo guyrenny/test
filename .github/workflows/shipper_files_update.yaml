@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened]
     paths:
-      - 'integrations/shared/aws-shipper/**/template.yaml'
+      - '**/aws-shipper/**/template.yaml'
        
   workflow_dispatch:
 
