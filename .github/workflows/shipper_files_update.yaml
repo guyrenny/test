@@ -40,11 +40,11 @@ jobs:
           # need to check if i need this condition
           git pull origin ${branch_name} --rebase
 
-      - uses: jitterbit/get-changed-files@v1
-        id: get_changed_files
-        with:
-          format: space-delimited
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: jitterbit/get-changed-files@v1
+      #   id: get_changed_files
+      #   with:
+      #     format: space-delimited
+      #     token: ${{ secrets.GITHUB_TOKEN }}
           
       # - name: Get template version 
       #   run: |
