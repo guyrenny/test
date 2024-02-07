@@ -1,0 +1,6 @@
+  - revision: ..
+          template:
+            type: CloudFormation
+            cloudformation: ../shared/aws-shipper/v0.0.13/template.yaml
+          field_definitions: v../fields.yaml
+          group_definitions: v../groups.yaml
