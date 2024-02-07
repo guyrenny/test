@@ -115,9 +115,10 @@ jobs:
           do
             integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1) 
             integration_new_version=$(./scripts/update_version.sh $integration_version)
-            if [ -d "integrations/${integration}/v$integration_version" ]; then            
-              cp integrations/$integration/v$integration_version/fields.yaml integrations/$integration/v$integration_new_version/fields.yaml
-              cp integrations/$integration/v$integration_version/groups.yaml integrations/$integration/v$integration_new_version/groups.yaml
+            if [ -d "integrations/${integration}/v$integration_version" ]; then
+              ls integrations/${integration}/
+              cp integrations/$integration/v$integration_version/fields.yaml integrations/$integration/v$integration_new_version/
+              cp integrations/$integration/v$integration_version/groups.yaml integrations/$integration/v$integration_new_version/
             fi
           done
           
