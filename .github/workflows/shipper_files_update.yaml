@@ -71,7 +71,6 @@ jobs:
               mkdir -p integrations/${integration}/v$integration_version
             fi
           done
-## update integrations version
 
 ## add to the new directory fields and group files
       - name: Create fields and groups files
@@ -116,11 +115,11 @@ jobs:
               integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1)
               update_version=$(./scripts/update_version.sh $integration_version)
               echo "  - revision: $update_version
-                    template:
-                      type: CloudFormation
-                      cloudformation: ../shared/aws-shipper/v${{ env.template_version }}/template.yaml
-                    field_definitions: v$update_version/fields.yaml
-                    group_definitions: v$update_version/groups.yaml" >> integrations/${integration}/manifest.yaml
+              template:
+                type: CloudFormation
+                cloudformation: ../shared/aws-shipper/v${{ env.template_version }}/template.yaml
+              field_definitions: v$update_version/fields.yaml
+              group_definitions: v$update_version/groups.yaml" >> integrations/${integration}/manifest.yaml
             fi
           done
           
