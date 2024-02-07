@@ -71,8 +71,22 @@ jobs:
               mkdir -p integrations/${integration}/v$integration_version
             fi
           done
-## update integrations version
 
+## add to the new directory fields and group files
+      - name: Create fields and groups files
+        run: |
+          chmod +x ./scripts/update_version.sh
+          for integration in $(echo $integration_list | tr "," "\n")
+          do
+            integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1) 
+            integration_new_version=$(./scripts/update_version.sh $integration_version)
+            if [ -d "integrations/${integration}/v$integration_version" ]; then
+              ls integrations/${integration}/
+              cp integrations/$integration/v$integration_version/fields.yaml integrations/$integration/v$integration_new_version/
+              cp integrations/$integration/v$integration_version/groups.yaml integrations/$integration/v$integration_new_version/
+            fi
+          done
+          
 ## update the changloge file
 # need to change the $update_version to the actual versionj
       - name: Update the changloge file
@@ -89,6 +103,7 @@ jobs:
                       - Update AWS Logs Lambda shipper to v${{ env.template_version }}. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details." >> integrations/${integration}/changelog.yaml
             fi
           done
+          
 ## update the manifest file
 # need to change the $update_version to the actual version
       - name: Update the menifest file
@@ -100,24 +115,11 @@ jobs:
               integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1)
               update_version=$(./scripts/update_version.sh $integration_version)
               echo "  - revision: $update_version
-                    template:
-                      type: CloudFormation
-                      cloudformation: ../shared/aws-shipper/v${{ env.template_version }}/template.yaml
-                    field_definitions: v$update_version/fields.yaml
-                    group_definitions: v$update_version/groups.yaml" >> integrations/${integration}/manifest.yaml
-            fi
-          done
-## add to the new directory fields and group files
-      - name: Create fields and groups files
-        run: |
-          chmod +x ./scripts/update_version.sh
-          for integration in $(echo $integration_list | tr "," "\n")
-          do
-            integration_version=$(cat ./integrations/$integration/manifest.yaml | grep " revision" | grep -oE '[^ ]+$' | tail -1) 
-            integration_new_version=$(./scripts/update_version.sh $integration_version)
-            if [ -d "integrations/${integration}/v$integration_version" ]; then            
-              cp integrations/$integration/v$integration_version/fields.yaml integrations/$integration/v$integration_new_version/fields.yaml
-              cp integrations/$integration/v$integration_version/groups.yaml integrations/$integration/v$integration_new_version/groups.yaml
+              template:
+                type: CloudFormation
+                cloudformation: ../shared/aws-shipper/v${{ env.template_version }}/template.yaml
+              field_definitions: v$update_version/fields.yaml
+              group_definitions: v$update_version/groups.yaml" >> integrations/${integration}/manifest.yaml
             fi
           done
           
