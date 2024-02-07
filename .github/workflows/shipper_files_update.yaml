@@ -2,7 +2,7 @@ name: integrations files update
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened,synchronize]
     paths:
       - 'integrations/shared/aws-shipper/**/template.yaml'
        
@@ -40,20 +40,25 @@ jobs:
           # need to check if i need this condition
           git pull origin ${branch_name} --rebase
 
-      - uses: actions/checkout@v2.1.0
       - uses: jitterbit/get-changed-files@v1
         id: get_changed_files
         with:
           format: space-delimited
           token: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Get template version 
+      # - name: Get template version 
+      #   run: |
+      #     changed_files="${{ steps.get_changed_files.outputs.all }}"
+      #     if [[ $changed_files =~ v([0-9]+\.[0-9]+\.[0-9]+)/template.yaml ]]; then 
+      #       template_version="${BASH_REMATCH[1]}"
+      #       echo "template_version=$template_version" >> $GITHUB_ENV
+      #     fi
+
+      - name: get template vesion
         run: |
-          changed_files="${{ steps.get_changed_files.outputs.all }}"
-          if [[ $changed_files =~ v([0-9]+\.[0-9]+\.[0-9]+)/template.yaml ]]; then 
-            template_version="${BASH_REMATCH[1]}"
-            echo "template_version=$template_version" >> $GITHUB_ENV
-          fi
+          template_version=$(ls integrations/shared/aws-shipper | tail -1)
+          template_version="${template_version//v}" # remove the v from the version
+          echo "template_version=$template_version" >> $GITHUB_ENV
 
 # create a new folder with new version
       - name: Create new directories with new versions
