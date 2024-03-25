@@ -1,0 +1,8 @@
+---
+groups:
+  - id: AdvancedSettings
+    name: Advanced Settings
+  - id: LambdaConfiguration
+    name: Lambda Configuration
+  - id: VPCConfiguration
+    name: VPC Configuration
