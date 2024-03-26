@@ -7,4 +7,8 @@ changes:
   - version: 2.0.1
     description_md: |
       # Changes
-      - Update to AWS Logs Lambda shipper v0.0.13. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details.
+      - Update to AWS Logs Lambda shipper v0.0.13. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details. 
+    - version: 2.0.2
+    description_md: |
+      # Changes
+      - Update AWS Logs Lambda shipper to v0.0.13. Read [Changelog](https://github.com/coralogix/cloudformation-coralogix-aws/blob/master/aws-integrations/aws-shipper-lambda/CHANGELOG.md) for more details.
