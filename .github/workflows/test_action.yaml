@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         id: checkout
         with:
-          repository: guyrenny/guyrenny-terraform-aws
+          repository: coralogix/cloudformation-coralogix-aws
           token: ${{ secrets.DESTINATION_REPO_TOKEN }}
 
       - uses: aws-actions/configure-aws-credentials@v2
