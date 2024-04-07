@@ -53,8 +53,10 @@ jobs:
       - name: run test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          coralogix_private_api_key_get_logs: ${{ secrets.coralogix_private_api_key_get_logs }}
+          coralogix_private_api_key_send_logs: ${{ secrets.coralogix_private_api_key_send_logs }}
         run: | 
           ls
           python3 -m pip install --no-cache-dir -r requirements.txt
           chmod +x deploy_test.sh
-          ./deploy_test.sh terraform https://github.com/coralogix/terraform-coralogix-aws.git master
+          ./deploy_test.sh cloudformation https://github.com/coralogix/cloudformation-coralogix-aws.git master
