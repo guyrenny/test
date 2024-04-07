@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         id: checkout
         with:
-          repository: coralogix/aws-lambda-integration-tests
+          repository: guyrenny/guyrenny-terraform-aws
           token: ${{ secrets.DESTINATION_REPO_TOKEN }}
 
       - uses: aws-actions/configure-aws-credentials@v2
