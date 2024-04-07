@@ -44,6 +44,8 @@ jobs:
       - run: pip3 install cargo-lambda
 
       - name: run test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: | 
           ls
           python3 -m pip install --no-cache-dir -r requirements.txt
