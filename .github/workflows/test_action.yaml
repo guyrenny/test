@@ -40,5 +40,5 @@ jobs:
       - name: run test
         run: | 
           ls
-          chmod +x ./deploy_code.sh
-          ./deploy_code.sh sar https://github.com/coralogix/coralogix-aws-shipper.git master
+          chmod +x deploy_test.sh
+          ./deploy_test.sh sar https://github.com/coralogix/coralogix-aws-shipper.git master
