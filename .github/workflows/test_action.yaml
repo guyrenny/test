@@ -39,4 +39,5 @@ jobs:
 
       - name: run test
         run: | 
+          ls
           ./deploy_code.sh sar https://github.com/coralogix/coralogix-aws-shipper.git master
