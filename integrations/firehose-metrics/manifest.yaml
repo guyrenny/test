@@ -34,3 +34,6 @@ revisions:
       cloudformation: v0.0.3/template.yaml
     field_definitions: v0.0.3/fields.yaml
     group_definitions: v0.0.3/groups.yaml 
+  - revision: 0.0.5
+    template: !CloudFormationTemplate v0.0.5/template.yaml
+    field_definitions: v0.0.5/fields.yaml
