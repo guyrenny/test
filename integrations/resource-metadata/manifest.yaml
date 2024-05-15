@@ -18,3 +18,6 @@ revisions:
       cloudformation: v1.2.3/template.yaml
     field_definitions: v1.2.3/fields.yaml
     group_definitions: v1.2.3/groups.yaml
+  - revision: 1.2.8
+    template: !CloudFormationTemplate v1.2.8/template.yaml
+    field_definitions: v1.2.8/fields.yaml
