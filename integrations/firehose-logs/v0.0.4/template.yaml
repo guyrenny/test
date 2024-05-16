@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Send Kinesis Firehose stream data to Coralogix.
+Description: Send Kinesis Firehose stream data to Coralogix
 Parameters:
   CoralogixRegion:
     Type: String
@@ -120,10 +120,9 @@ Resources:
     Properties:
       LogGroupName: !Ref DeliveryStreamLogGroup
       LogStreamName: !Ref AWS::StackName
-      
-###################################
-# Firehose Logs Stream
-###################################
+      ###################################
+      # Firehose Logs Stream
+      ###################################
   CloudWatchLogsRole:
     Type: AWS::IAM::Role
     Properties:
@@ -272,16 +271,10 @@ Resources:
           BucketARN: !GetAtt BackupDataBucket.Arn
           CompressionFormat: GZIP
           RoleARN: !GetAtt FirehoseLogsRole.Arn
-
   # Used as a bridge because CF doesn't allow for conditional depends on clauses.
   NonNotifierResourcesAreReady:
     Type: AWS::CloudFormation::WaitConditionHandle
     Metadata:
-      CloudWatchLogsRoleReady: !Ref CloudWatchLogsRole
-      CloudWatchLogsPolicyReady: !Ref CloudWatchLogsPolicy
-      FirehoseLogsRoleReady: !Ref FirehoseLogsRole
-      FirehoseLogsPolicyReady: !Ref FirehoseLogsPolicy
-      CoralogixDeliveryLogsStreamReady: !Ref CoralogixDeliveryLogsStream
   IntegrationStatusNotifier:
     Type: Custom::IntegrationsServiceNotifier
     DependsOn:
@@ -293,11 +286,17 @@ Resources:
       - FirehoseLogsRole
       - FirehoseLogsPolicy
       - CoralogixDeliveryLogsStream
+      - NonNotifierResourcesAreReady
+
     Properties:
       #      {{AWS_ACCOUNT_ID}} is replaced during the template synchronisation
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:{{AWS_ACCOUNT_ID}}:function:integrations-custom-resource-notifier"
       IntegrationId: !Ref IntegrationId
-      CoralogixDomain: !Ref CustomDomain
+
+      CoralogixDomain: !If
+        - IsCustomDomain
+        - !Ref CustomDomain
+        - !FindInMap [ CoralogixRegionMap, !Ref CoralogixRegion, LogUrl ]
       CoralogixApiKey: !Ref ApiKey
 
       # Parameters to track
@@ -309,7 +308,6 @@ Resources:
       CloudwatchRetentionDays: !Ref CloudwatchRetentionDays
       IntegrationTypeLogs: !Ref IntegrationTypeLogs
       KinesisStreamAsSourceARN: !Ref KinesisStreamAsSourceARN
-
 Outputs:
   BackupDataBucketName:
     Description: S3 Bucket where failed deliveries will be backed-up
