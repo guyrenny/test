@@ -1,4 +1,4 @@
-# Integration definitions
+# Integration definition
 
 THis repository contains field definitions and Cloudformation
 templates for integrations.
